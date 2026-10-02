@@ -462,7 +462,7 @@ function Start-WpfInstallerApp {
 
     function Get-IconBmp($paths, $b64) {
         foreach ($p in $paths) {
-            if ($p -and (Test-Path $p)) {
+            if ($p -and [System.IO.File]::Exists($p)) {
                 try {
                     $bmp = New-Object System.Windows.Media.Imaging.BitmapImage
                     $bmp.BeginInit()
@@ -491,17 +491,25 @@ function Start-WpfInstallerApp {
     }
 
     $ctxDir = $null
-    if ($PSScriptRoot) { $ctxDir = $PSScriptRoot } elseif ($MyInvocation.MyCommand.Path) { $ctxDir = Split-Path -Parent $MyInvocation.MyCommand.Path }
-    if (-not $ctxDir -and (Test-Path (Join-Path (Get-Location).Path "dist\patcher.js"))) { $ctxDir = (Get-Location).Path }
+    if ($PSScriptRoot) { $ctxDir = $PSScriptRoot }
+    elseif ($MyInvocation.MyCommand.Path) {
+        try { $ctxDir = [System.IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Path) } catch {}
+    }
+    if (-not $ctxDir) {
+        try {
+            $cur = (Get-Location).Path
+            if ([System.IO.File]::Exists([System.IO.Path]::Combine($cur, "dist\patcher.js"))) { $ctxDir = $cur }
+        } catch {}
+    }
 
-    $pathsStable = @((Join-Path (Get-Location).Path "discord.png"))
-    if ($ctxDir) { $pathsStable += (Join-Path $ctxDir "discord.png") }
+    $pathsStable = @([System.IO.Path]::Combine((Get-Location).Path, "discord.png"))
+    if ($ctxDir) { $pathsStable += [System.IO.Path]::Combine($ctxDir, "discord.png") }
 
-    $pathsPTB = @((Join-Path (Get-Location).Path "discord-ptb.png"))
-    if ($ctxDir) { $pathsPTB += (Join-Path $ctxDir "discord-ptb.png") }
+    $pathsPTB = @([System.IO.Path]::Combine((Get-Location).Path, "discord-ptb.png"))
+    if ($ctxDir) { $pathsPTB += [System.IO.Path]::Combine($ctxDir, "discord-ptb.png") }
 
-    $pathsCanary = @((Join-Path (Get-Location).Path "discord-canary.png"))
-    if ($ctxDir) { $pathsCanary += (Join-Path $ctxDir "discord-canary.png") }
+    $pathsCanary = @([System.IO.Path]::Combine((Get-Location).Path, "discord-canary.png"))
+    if ($ctxDir) { $pathsCanary += [System.IO.Path]::Combine($ctxDir, "discord-canary.png") }
 
     $imgStable.Source = Get-IconBmp $pathsStable $b64Stable
     $imgPTB.Source    = Get-IconBmp $pathsPTB $b64PTB
@@ -579,16 +587,18 @@ function Start-WpfInstallerApp {
             @{ B = "DiscordCanary"; P = "$env:LOCALAPPDATA\DiscordCanary" }
         )
         foreach ($i in $list) {
-            if (Test-Path $i.P) { $res[$i.B] += $i.P }
+            if ([System.IO.Directory]::Exists($i.P)) { $res[$i.B] += $i.P }
         }
-        if (Test-Path "C:\ProgramData") {
+        if ([System.IO.Directory]::Exists("C:\ProgramData")) {
             foreach ($k in @("Discord", "DiscordPTB", "DiscordCanary")) {
-                $m = Get-ChildItem "C:\ProgramData" -Directory -Recurse -Depth 2 -Filter "*$k*" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
-                if ($m) {
-                    foreach ($x in $m) {
-                        if ($x -and -not ($res[$k] -contains $x)) { $res[$k] += $x }
+                try {
+                    $m = [System.IO.Directory]::GetDirectories("C:\ProgramData", "*$k*", [System.IO.SearchOption]::AllDirectories)
+                    if ($m) {
+                        foreach ($x in $m) {
+                            if ($x -and -not ($res[$k] -contains $x)) { $res[$k] += $x }
+                        }
                     }
-                }
+                } catch {}
             }
         }
         return $res
@@ -643,8 +653,16 @@ function Start-WpfInstallerApp {
         $script:pb        = $pb
 
         $ctxDir = $null
-        if ($PSScriptRoot) { $ctxDir = $PSScriptRoot } elseif ($MyInvocation.MyCommand.Path) { $ctxDir = Split-Path -Parent $MyInvocation.MyCommand.Path }
-        if (-not $ctxDir -and (Test-Path (Join-Path (Get-Location).Path "dist\patcher.js"))) { $ctxDir = (Get-Location).Path }
+        if ($PSScriptRoot) { $ctxDir = $PSScriptRoot }
+        elseif ($MyInvocation.MyCommand.Path) {
+            try { $ctxDir = [System.IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Path) } catch {}
+        }
+        if (-not $ctxDir) {
+            try {
+                $cur = (Get-Location).Path
+                if ([System.IO.File]::Exists([System.IO.Path]::Combine($cur, "dist\patcher.js"))) { $ctxDir = $cur }
+            } catch {}
+        }
 
         $sync = [hashtable]::Synchronized(@{
             Action   = $action
@@ -664,35 +682,67 @@ function Start-WpfInstallerApp {
         $worker = {
             param($sync)
 
-            function Join-Path($a, $b) { return [System.IO.Path]::Combine($a, $b) }
-            function Test-Path($p) { return [System.IO.File]::Exists($p) -or [System.IO.Directory]::Exists($p) }
-
-            function Add-Log($msg) {
+            function global:Add-Log($msg) {
                 $ts = [DateTime]::Now.ToString("HH:mm:ss")
                 $null = $sync.Logs.Add("[$ts] $msg")
             }
+            function Add-Log($msg) { global:Add-Log $msg }
 
-            function Invoke-Cli($cliExe, $cliArgs) {
-                $tOut = [System.IO.Path]::GetTempFileName()
-                & cmd.exe /c "`"$cliExe`" $cliArgs > `"$tOut`" 2>&1"
-                if (Test-Path $tOut) {
-                    $lines = Get-Content $tOut -ErrorAction SilentlyContinue
-                    Remove-Item $tOut -Force -ErrorAction SilentlyContinue
-                    if ($lines) {
-                        foreach ($l in $lines) {
-                            $c = $l.Trim()
-                            if ($c) { Add-Log $c }
+            function global:Invoke-Cli($cliExe, $cliArgs) {
+                try {
+                    try {
+                        $oldProcs = [System.Diagnostics.Process]::GetProcessesByName("VencordInstallerCli")
+                        if ($oldProcs) {
+                            foreach ($p in $oldProcs) {
+                                try { $p.Kill() } catch {}
+                            }
+                        }
+                    } catch {}
+
+                    $psi = New-Object System.Diagnostics.ProcessStartInfo
+                    $psi.FileName = $cliExe
+                    $psi.Arguments = $cliArgs
+                    $psi.UseShellExecute = $false
+                    $psi.RedirectStandardOutput = $true
+                    $psi.RedirectStandardError = $true
+                    $psi.RedirectStandardInput = $true
+                    $psi.CreateNoWindow = $true
+
+                    $proc = [System.Diagnostics.Process]::Start($psi)
+                    if ($proc) {
+                        $proc.StandardInput.Close()
+                        $outTask = $proc.StandardOutput.ReadToEndAsync()
+                        $errTask = $proc.StandardError.ReadToEndAsync()
+
+                        if ($proc.WaitForExit(15000)) {
+                            $outStr = $outTask.Result
+                            $errStr = $errTask.Result
+                            $all = @()
+                            if ($errStr) { $all += ($errStr -split "`r?`n") }
+                            if ($outStr) { $all += ($outStr -split "`r?`n") }
+                            foreach ($l in $all) {
+                                $c = $l.Trim()
+                                if ($c -and -not ($c -like "*Failed to fetch https://api.github.com*") -and -not ($c -like "*Press Enter to exit*")) {
+                                    global:Add-Log $c
+                                }
+                            }
+                        } else {
+                            try { $proc.Kill() } catch {}
+                            global:Add-Log "Process timed out after 15 seconds."
                         }
                     }
+                } catch {
+                    global:Add-Log ("CLI error: " + $_.Exception.Message)
                 }
             }
+            function Invoke-Cli($cliExe, $cliArgs) { global:Invoke-Cli $cliExe $cliArgs }
 
             try {
                 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]3072 -bor [System.Net.SecurityProtocolType]768 -bor [System.Net.SecurityProtocolType]192
 
-                $vDir = "$env:APPDATA\Vencord"
-                $tDist = "$vDir\dist"
-                $sFile = "$vDir\settings\settings.json"
+                $vDir = [System.IO.Path]::Combine($env:APPDATA, "Vencord")
+                $tDist = [System.IO.Path]::Combine($vDir, "dist")
+                $sFile = [System.IO.Path]::Combine($vDir, "settings\settings.json")
                 $msg = $sync.I18n
 
                 Add-Log ([string]::Format($msg.LogTargets, ($sync.Targets -join ', ')))
@@ -700,35 +750,40 @@ function Start-WpfInstallerApp {
                 $src = $null
                 $cli = $null
                 $tmp = $null
-                $cacheDir = "$env:LOCALAPPDATA\FakeMuteDeafen\dist"
+                $cacheDir = [System.IO.Path]::Combine($env:LOCALAPPDATA, "FakeMuteDeafen\dist")
 
                 $cliCandidates = @()
-                if ($sync.LocalDir) { $cliCandidates += (Join-Path $sync.LocalDir "VencordInstallerCli.exe") }
-                $cliCandidates += (Join-Path $env:TEMP "VencordInstallerCli.exe")
-                $cliCandidates += "$env:APPDATA\Vencord\dist\Installer\VencordInstallerCli.exe"
-                $cliCandidates += "$env:LOCALAPPDATA\FakeMuteDeafen\VencordInstallerCli.exe"
+                if ($sync.LocalDir) { $cliCandidates += [System.IO.Path]::Combine($sync.LocalDir, "VencordInstallerCli.exe") }
+                $cliCandidates += [System.IO.Path]::Combine($env:TEMP, "VencordInstallerCli.exe")
+                $cliCandidates += [System.IO.Path]::Combine($env:APPDATA, "Vencord\dist\Installer\VencordInstallerCli.exe")
+                $cliCandidates += [System.IO.Path]::Combine($env:LOCALAPPDATA, "FakeMuteDeafen\VencordInstallerCli.exe")
 
                 foreach ($c in $cliCandidates) {
-                    if ((Test-Path $c) -and ((Get-Item $c).Length -gt 1000000)) {
-                        $cli = $c
-                        break
+                    if ([System.IO.File]::Exists($c)) {
+                        try {
+                            $fi = New-Object System.IO.FileInfo($c)
+                            if ($fi.Length -gt 1000000) {
+                                $cli = $c
+                                break
+                            }
+                        } catch {}
                     }
                 }
 
                 if ($sync.LocalDir) {
-                    $lDist = Join-Path $sync.LocalDir "dist"
-                    if ((Test-Path $lDist) -and (Test-Path (Join-Path $lDist "patcher.js"))) {
+                    $lDist = [System.IO.Path]::Combine($sync.LocalDir, "dist")
+                    if ([System.IO.Directory]::Exists($lDist) -and [System.IO.File]::Exists([System.IO.Path]::Combine($lDist, "patcher.js"))) {
                         $src = $lDist
                     }
                 }
-                if (-not $src -and (Test-Path (Join-Path $cacheDir "patcher.js"))) {
+                if (-not $src -and [System.IO.File]::Exists([System.IO.Path]::Combine($cacheDir, "patcher.js"))) {
                     $src = $cacheDir
                 }
 
                 if ($sync.Action -eq "Uninstall") {
                     if (-not $cli) {
-                        $tempCli = Join-Path $env:TEMP "VencordInstallerCli.exe"
-                        if (Test-Path $tempCli) {
+                        $tempCli = [System.IO.Path]::Combine($env:TEMP, "VencordInstallerCli.exe")
+                        if ([System.IO.File]::Exists($tempCli)) {
                             $cli = $tempCli
                         } else {
                             Add-Log $msg.LogDownloadingCli
@@ -745,15 +800,17 @@ function Start-WpfInstallerApp {
 
                         if ($paths -and $paths.Count -gt 0) {
                             foreach ($loc in $paths) {
-                                if (Test-Path $loc) {
+                                if ([System.IO.Directory]::Exists($loc)) {
                                     Add-Log ([string]::Format($msg.LogUninstallingLoc, $target, $loc))
-                                    $apps = Get-ChildItem $loc -Directory -Filter "app-*" -ErrorAction SilentlyContinue | Sort-Object { try { [version]($_.Name -replace '^app-','') } catch { [version]'0.0.0.0' } } -Descending
+                                    $appDirs = [System.IO.Directory]::GetDirectories($loc, "app-*")
                                     $needsUnpatch = $false
-                                    foreach ($a in $apps) {
-                                        $resDir = Join-Path $a.FullName "resources"
-                                        if (Test-Path (Join-Path $resDir "_app.asar")) {
-                                            $needsUnpatch = $true
-                                            break
+                                    if ($appDirs) {
+                                        foreach ($a in $appDirs) {
+                                            $origAsar = [System.IO.Path]::Combine($a, "resources\_app.asar")
+                                            if ([System.IO.File]::Exists($origAsar)) {
+                                                $needsUnpatch = $true
+                                                break
+                                            }
                                         }
                                     }
 
@@ -763,13 +820,17 @@ function Start-WpfInstallerApp {
                                         Add-Log ([string]::Format($msg.LogAlreadyClean, $target))
                                     }
 
-                                    foreach ($a in $apps) {
-                                        $resDir = Join-Path $a.FullName "resources"
-                                        $orig = Join-Path $resDir "_app.asar"
-                                        $stub = Join-Path $resDir "app.asar"
-                                        if (Test-Path $orig) {
-                                            if (Test-Path $stub) { Remove-Item $stub -Force -ErrorAction SilentlyContinue }
-                                            Rename-Item -Path $orig -NewName "app.asar" -Force -ErrorAction SilentlyContinue
+                                    if ($appDirs) {
+                                        foreach ($a in $appDirs) {
+                                            $resDir = [System.IO.Path]::Combine($a, "resources")
+                                            $orig = [System.IO.Path]::Combine($resDir, "_app.asar")
+                                            $stub = [System.IO.Path]::Combine($resDir, "app.asar")
+                                            if ([System.IO.File]::Exists($orig)) {
+                                                if ([System.IO.File]::Exists($stub)) {
+                                                    [System.IO.File]::Delete($stub)
+                                                }
+                                                [System.IO.File]::Move($orig, $stub)
+                                            }
                                         }
                                     }
                                 }
@@ -780,9 +841,10 @@ function Start-WpfInstallerApp {
                         }
                     }
 
-                    if (Test-Path $sFile) {
+                    if ([System.IO.File]::Exists($sFile)) {
                         try {
-                            $c = Get-Content $sFile -Raw | ConvertFrom-Json -AsHashtable
+                            $raw = [System.IO.File]::ReadAllText($sFile, [System.Text.Encoding]::UTF8)
+                            $c = $raw | ConvertFrom-Json -AsHashtable
                             if ($c.ContainsKey("plugins") -and $c["plugins"].ContainsKey("FakeMuteDeafen")) {
                                 $c["plugins"]["FakeMuteDeafen"]["enabled"] = $false
                                 $utf8 = New-Object System.Text.UTF8Encoding($false)
@@ -798,8 +860,13 @@ function Start-WpfInstallerApp {
 
                 if (-not $src) {
                     Add-Log $msg.LogDownloadingRepo
-                    if (-not (Test-Path $cacheDir)) { New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null }
-                    $distZip = Join-Path $env:TEMP "FMD_dist.zip"
+                    if (-not [System.IO.Directory]::Exists($cacheDir)) {
+                        [System.IO.Directory]::CreateDirectory($cacheDir) | Out-Null
+                    } else {
+                        try { [System.IO.Directory]::Delete($cacheDir, $true) } catch {}
+                        [System.IO.Directory]::CreateDirectory($cacheDir) | Out-Null
+                    }
+                    $distZip = [System.IO.Path]::Combine($env:TEMP, "FMD_dist.zip")
                     $wc = New-Object System.Net.WebClient
                     $wc.Headers.Add("User-Agent", "PowerShell")
                     $dlOk = $false
@@ -807,30 +874,35 @@ function Start-WpfInstallerApp {
                         $wc.DownloadFile($sync.DistUrl, $distZip)
                         Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
                         [System.IO.Compression.ZipFile]::ExtractToDirectory($distZip, $cacheDir)
-                        Remove-Item $distZip -Force -ErrorAction SilentlyContinue
-                        if (Test-Path (Join-Path $cacheDir "patcher.js")) {
+                        if ([System.IO.File]::Exists($distZip)) {
+                            [System.IO.File]::Delete($distZip)
+                        }
+                        if ([System.IO.File]::Exists([System.IO.Path]::Combine($cacheDir, "patcher.js"))) {
                             $src = $cacheDir
                             $dlOk = $true
                         }
                     } catch {}
 
                     if (-not $dlOk) {
-                        $tmp = Join-Path $env:TEMP ("FMD_" + (Get-Random))
-                        New-Item -ItemType Directory -Path $tmp -Force | Out-Null
-                        $zipFb = Join-Path $tmp "package.zip"
+                        $tmp = [System.IO.Path]::Combine($env:TEMP, ("FMD_" + (Get-Random)))
+                        [System.IO.Directory]::CreateDirectory($tmp) | Out-Null
+                        $zipFb = [System.IO.Path]::Combine($tmp, "package.zip")
                         $wc.DownloadFile($sync.RepoUrl, $zipFb)
                         Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
                         [System.IO.Compression.ZipFile]::ExtractToDirectory($zipFb, $tmp)
-                        $ext = Get-ChildItem -Path $tmp -Directory | Where-Object { $_.Name -like "*fake-mute-deafen*" } | Select-Object -First 1
-                        if (-not $ext) { $ext = Get-Item $tmp }
-                        $src = Join-Path $ext.FullName "dist"
-                        if (-not $cli) { $cli = Join-Path $ext.FullName "VencordInstallerCli.exe" }
+                        $subDirs = [System.IO.Directory]::GetDirectories($tmp, "*fake-mute-deafen*")
+                        $ext = if ($subDirs -and $subDirs.Length -gt 0) { $subDirs[0] } else { $tmp }
+                        $src = [System.IO.Path]::Combine($ext, "dist")
+                        if (-not $cli) {
+                            $candidateCli = [System.IO.Path]::Combine($ext, "VencordInstallerCli.exe")
+                            if ([System.IO.File]::Exists($candidateCli)) { $cli = $candidateCli }
+                        }
                     }
                 }
 
                 if (-not $cli) {
-                    $tempCli = Join-Path $env:TEMP "VencordInstallerCli.exe"
-                    if (-not (Test-Path $tempCli)) {
+                    $tempCli = [System.IO.Path]::Combine($env:TEMP, "VencordInstallerCli.exe")
+                    if (-not [System.IO.File]::Exists($tempCli)) {
                         Add-Log $msg.LogDownloadingCli
                         $wc = New-Object System.Net.WebClient
                         $wc.Headers.Add("User-Agent", "PowerShell")
@@ -845,26 +917,51 @@ function Start-WpfInstallerApp {
 
                     if ($paths -and $paths.Count -gt 0) {
                         foreach ($loc in $paths) {
-                            if (Test-Path $loc) {
+                            if ([System.IO.Directory]::Exists($loc)) {
                                 Add-Log ([string]::Format($msg.LogChecking, $target, $loc))
-                                $apps = Get-ChildItem $loc -Directory -Filter "app-*" -ErrorAction SilentlyContinue | Sort-Object { try { [version]($_.Name -replace '^app-','') } catch { [version]'0.0.0.0' } } -Descending
-                                if ($apps) {
-                                    $latest = $apps[0]
-                                    $latRes = Join-Path $latest.FullName "resources"
-                                    if (-not (Test-Path $latRes)) { New-Item -ItemType Directory -Path $latRes -Force | Out-Null }
-                                    $hasAsar = (Test-Path (Join-Path $latRes "app.asar")) -or (Test-Path (Join-Path $latRes "_app.asar"))
+                                $appDirs = [System.IO.Directory]::GetDirectories($loc, "app-*")
+                                $latest = $null
+                                $maxVer = [version]"0.0.0.0"
+                                if ($appDirs) {
+                                    foreach ($d in $appDirs) {
+                                        $fName = [System.IO.Path]::GetFileName($d)
+                                        $verStr = $fName -replace "^app-", ""
+                                        try {
+                                            $v = [version]$verStr
+                                            if ($v -gt $maxVer) {
+                                                $maxVer = $v
+                                                $latest = $d
+                                            }
+                                        } catch {}
+                                    }
+                                }
+
+                                if ($latest) {
+                                    $latRes = [System.IO.Path]::Combine($latest, "resources")
+                                    if (-not [System.IO.Directory]::Exists($latRes)) {
+                                        [System.IO.Directory]::CreateDirectory($latRes) | Out-Null
+                                    }
+                                    $asar = [System.IO.Path]::Combine($latRes, "app.asar")
+                                    $origAsar = [System.IO.Path]::Combine($latRes, "_app.asar")
+                                    $hasAsar = [System.IO.File]::Exists($asar) -or [System.IO.File]::Exists($origAsar)
                                     if (-not $hasAsar) {
-                                        for ($i = 1; $i -lt $apps.Count; $i++) {
-                                            $prevRes = Join-Path $apps[$i].FullName "resources"
-                                            $prevAsar = (Test-Path (Join-Path $prevRes "app.asar")) -or (Test-Path (Join-Path $prevRes "_app.asar"))
-                                            if ($prevAsar) {
-                                                Copy-Item (Join-Path $prevRes "*") $latRes -Recurse -Force -ErrorAction SilentlyContinue
-                                                break
+                                        foreach ($d in $appDirs) {
+                                            if ($d -ne $latest) {
+                                                $prevRes = [System.IO.Path]::Combine($d, "resources")
+                                                $prevAsar = [System.IO.Path]::Combine($prevRes, "app.asar")
+                                                $prevOrig = [System.IO.Path]::Combine($prevRes, "_app.asar")
+                                                if ([System.IO.File]::Exists($prevAsar)) {
+                                                    [System.IO.File]::Copy($prevAsar, $asar, $true)
+                                                    break
+                                                } elseif ([System.IO.File]::Exists($prevOrig)) {
+                                                    [System.IO.File]::Copy($prevOrig, $asar, $true)
+                                                    break
+                                                }
                                             }
                                         }
                                     }
-                                    if ((Test-Path (Join-Path $latRes "_app.asar")) -and -not (Test-Path (Join-Path $latRes "app.asar"))) {
-                                        Copy-Item (Join-Path $latRes "_app.asar") (Join-Path $latRes "app.asar") -Force -ErrorAction SilentlyContinue
+                                    if ([System.IO.File]::Exists($origAsar) -and -not [System.IO.File]::Exists($asar)) {
+                                        [System.IO.File]::Copy($origAsar, $asar, $true)
                                     }
                                 }
 
@@ -879,19 +976,37 @@ function Start-WpfInstallerApp {
                 }
 
                 Add-Log $msg.LogCopying
-                if (-not (Test-Path $tDist)) { New-Item -ItemType Directory -Path $tDist -Force | Out-Null }
-                Copy-Item -Path "$src\*" -Destination "$tDist\" -Recurse -Force
+                if (-not [System.IO.Directory]::Exists($tDist)) {
+                    [System.IO.Directory]::CreateDirectory($tDist) | Out-Null
+                }
+                foreach ($file in [System.IO.Directory]::GetFiles($src, "*", [System.IO.SearchOption]::AllDirectories)) {
+                    $rel = $file.Substring($src.Length).TrimStart("\", "/")
+                    $destFile = [System.IO.Path]::Combine($tDist, $rel)
+                    $destDir = [System.IO.Path]::GetDirectoryName($destFile)
+                    if (-not [System.IO.Directory]::Exists($destDir)) {
+                        [System.IO.Directory]::CreateDirectory($destDir) | Out-Null
+                    }
+                    [System.IO.File]::Copy($file, $destFile, $true)
+                }
 
-                $theme = "$vDir\themes\midnight.theme.css"
-                if (Test-Path $theme) { Remove-Item -Path $theme -Force -ErrorAction SilentlyContinue }
+                $theme = [System.IO.Path]::Combine($vDir, "themes\midnight.theme.css")
+                if ([System.IO.File]::Exists($theme)) {
+                    [System.IO.File]::Delete($theme)
+                }
 
                 Add-Log $msg.LogUpdatingConfig
-                $sDir = "$vDir\settings"
-                if (-not (Test-Path $sDir)) { New-Item -ItemType Directory -Path $sDir -Force | Out-Null }
-                $c = @{}
-                if (Test-Path $sFile) {
-                    try { $c = Get-Content $sFile -Raw | ConvertFrom-Json -AsHashtable } catch { $c = @{} }
+                $sDir = [System.IO.Path]::Combine($vDir, "settings")
+                if (-not [System.IO.Directory]::Exists($sDir)) {
+                    [System.IO.Directory]::CreateDirectory($sDir) | Out-Null
                 }
+                $c = @{}
+                if ([System.IO.File]::Exists($sFile)) {
+                    try {
+                        $raw = [System.IO.File]::ReadAllText($sFile, [System.Text.Encoding]::UTF8)
+                        $c = $raw | ConvertFrom-Json -AsHashtable
+                    } catch { $c = @{} }
+                }
+                if (-not $c) { $c = @{} }
                 $c["autoUpdate"] = $false
                 $c["autoUpdateNotification"] = $false
                 if ($c.ContainsKey("enabledThemes") -and $c["enabledThemes"]) {
@@ -904,15 +1019,15 @@ function Start-WpfInstallerApp {
                 $utf8 = New-Object System.Text.UTF8Encoding($false)
                 [System.IO.File]::WriteAllText($sFile, ($c | ConvertTo-Json -Depth 10), $utf8)
 
-                if ($tmp -and (Test-Path $tmp)) {
-                    Remove-Item -Path $tmp -Recurse -Force -ErrorAction SilentlyContinue
+                if ($tmp -and [System.IO.Directory]::Exists($tmp)) {
+                    try { [System.IO.Directory]::Delete($tmp, $true) } catch {}
                 }
 
                 Add-Log $msg.LogInstallSuccess
                 $sync.Done = $true
             } catch {
                 $sync.Error = $_.Exception.Message
-                Add-Log ([string]::Format($sync.I18n.LogError, $sync.Error))
+                global:Add-Log ([string]::Format($sync.I18n.LogError, $sync.Error))
                 $sync.Done = $true
             }
         }
@@ -920,7 +1035,7 @@ function Start-WpfInstallerApp {
         $script:sync = $sync
         $iss = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
         $script:rs = [RunspaceFactory]::CreateRunspace($iss)
-        $script:rs.ApartmentState = [System.Threading.ApartmentState]::STA
+        $script:rs.ApartmentState = [System.Threading.ApartmentState]::MTA
         $script:rs.Open()
 
         $script:ps = [PowerShell]::Create()
