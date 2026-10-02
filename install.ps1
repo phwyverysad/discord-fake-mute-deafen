@@ -663,6 +663,9 @@ function Start-WpfInstallerApp {
         $worker = {
             param($sync)
 
+            function Join-Path($a, $b) { return [System.IO.Path]::Combine($a, $b) }
+            function Test-Path($p) { return [System.IO.File]::Exists($p) -or [System.IO.Directory]::Exists($p) }
+
             function Add-Log($msg) {
                 $ts = [DateTime]::Now.ToString("HH:mm:ss")
                 $null = $sync.Logs.Add("[$ts] $msg")
@@ -887,8 +890,9 @@ function Start-WpfInstallerApp {
         }
 
         $script:sync = $sync
-        $script:rs = [RunspaceFactory]::CreateRunspace()
-        $script:rs.ApartmentState = [System.Threading.ApartmentState]::MTA
+        $iss = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
+        $script:rs = [RunspaceFactory]::CreateRunspace($iss)
+        $script:rs.ApartmentState = [System.Threading.ApartmentState]::STA
         $script:rs.Open()
 
         $script:ps = [PowerShell]::Create()
