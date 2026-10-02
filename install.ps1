@@ -1,4 +1,4 @@
-﻿try {
+try {
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]3072 -bor [System.Net.SecurityProtocolType]768 -bor [System.Net.SecurityProtocolType]192
 } catch {}
 
@@ -10,6 +10,10 @@ try {
 Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
 
 function Start-WpfInstallerApp {
+    function T($b) {
+        return [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($b))
+    }
+
     $global:CurrentLang = "EN"
     $global:i18n = @{
         EN = @{
@@ -30,12 +34,12 @@ function Start-WpfInstallerApp {
             BtnStable    = "Discord"
             BtnPTB       = "Discord PTB"
             BtnCanary    = "Discord Canary"
-            BtnAll       = "ติดตั้งทั้งหมด"
-            BtnUninstall = "ถอนการติดตั้ง"
-            Ready        = "พร้อมทำงาน"
-            Working      = "กำลังทำงาน..."
-            Done         = "เสร็จสิ้น"
-            Error        = "ผิดพลาด: {0}"
+            BtnAll       = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LiX4Lix4LmJ4LiH4Lir4Lih4LiU")
+            BtnUninstall = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
+            Ready        = (T "4Lie4Lij4LmJ4Lit4Lih4LiX4Liz4LiH4Liy4LiZ")
+            Working      = (T "4LiB4Liz4Lil4Lix4LiH4LiX4Liz4LiH4Liy4LiZLi4u")
+            Done         = (T "4LmA4Liq4Lij4LmH4LiI4Liq4Li04LmJ4LiZ")
+            Error        = (T "4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
             LangBtn      = "EN"
         }
     }
@@ -103,6 +107,9 @@ function Start-WpfInstallerApp {
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bd" Property="Background" Value="#4752C4"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1E1F22"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="bd" Property="Opacity" Value="0.4"/>
