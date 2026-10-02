@@ -12,6 +12,8 @@ try {
         Add-Type -Name WinUtil -Namespace WinUtil -MemberDefinition @"
 [System.Runtime.InteropServices.DllImport("user32.dll")]
 public static extern bool ShowWindow(System.IntPtr hWnd, int nCmdShow);
+[System.Runtime.InteropServices.DllImport("user32.dll")]
+public static extern bool SetForegroundWindow(System.IntPtr hWnd);
 [System.Runtime.InteropServices.DllImport("kernel32.dll")]
 public static extern System.IntPtr GetConsoleWindow();
 "@ -ErrorAction SilentlyContinue
@@ -71,7 +73,7 @@ function Start-WpfInstallerApp {
             Working       = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liz4LmA4LiZ4Li04LiZ4LiB4Liy4LijLi4u")
             Done          = (T "4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM")
             Error         = (T "4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
-            SelectOne     = (T "4LiB4Lij4Li44LiT4Liy4LmA4Lil4Li34Lit4LiB4Lit4Lii4LmI4Liy4LiH4LiZ4LmJ4Lit4LiiIDEg4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZ")
+            SelectOne     = (T "4LiB4Lij4Li44LiT4Liy4LmA4Lil4Li34Lit4LiB4Lit4Lii4LmI4Liy4LiH4LiZ4LmJ4Lit4Lii IDEg4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZ")
             LogHeader     = (T "4Lia4Lix4LiZ4LiX4Li24LiB4LiB4Liy4Lij4LiX4Liz4LiH4Liy4LiZ")
             ThemeDark     = (T "4Lih4Li34LiU")
             ThemeLight    = (T "4Liq4Lin4LmI4Liy4LiH")
@@ -120,11 +122,14 @@ function Start-WpfInstallerApp {
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="FakeMuteDeafen"
-        Height="470" Width="440"
+        Height="430" Width="440"
         WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="True"
         FontFamily="Segoe UI, Leelawadee UI, Tahoma, sans-serif"
         ResizeMode="NoResize">
 
@@ -266,31 +271,40 @@ function Start-WpfInstallerApp {
                 </Grid>
             </Border>
 
-            <StackPanel Grid.Row="1" Margin="18,14,18,14">
-                <TextBlock Name="lblSelectTargets" Text="Discord Versions" Foreground="#949BA4" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8"/>
+            <Grid Grid.Row="1" Margin="18,12,18,14">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <UniformGrid Columns="3" Margin="0,0,0,14" Height="105">
+                <TextBlock Grid.Row="0" Name="lblSelectTargets" Text="Discord Versions" Foreground="#949BA4" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+                <UniformGrid Grid.Row="1" Columns="3" Margin="0,0,0,12" Height="102">
                     <CheckBox Name="chkStable" Style="{StaticResource CardCheck}">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Name="imgStable" Width="42" Height="42" Margin="0,2,0,6" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <Image Name="imgStable" Width="40" Height="40" Margin="0,2,0,6" RenderOptions.BitmapScalingMode="HighQuality"/>
                             <TextBlock Name="txtStable" Text="Discord" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </CheckBox>
                     <CheckBox Name="chkPTB" Style="{StaticResource CardCheck}">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Name="imgPTB" Width="42" Height="42" Margin="0,2,0,6" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <Image Name="imgPTB" Width="40" Height="40" Margin="0,2,0,6" RenderOptions.BitmapScalingMode="HighQuality"/>
                             <TextBlock Name="txtPTB" Text="Discord PTB" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </CheckBox>
                     <CheckBox Name="chkCanary" Style="{StaticResource CardCheck}">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Name="imgCanary" Width="42" Height="42" Margin="0,2,0,6" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <Image Name="imgCanary" Width="40" Height="40" Margin="0,2,0,6" RenderOptions.BitmapScalingMode="HighQuality"/>
                             <TextBlock Name="txtCanary" Text="Discord Canary" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </CheckBox>
                 </UniformGrid>
 
-                <Grid Margin="0,0,0,12">
+                <Grid Grid.Row="2" Margin="0,0,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -299,14 +313,17 @@ function Start-WpfInstallerApp {
                     <Button Name="btnUninstall" Grid.Column="1" Style="{StaticResource BtnDanger}" Content="Uninstall" Margin="6,0,0,0"/>
                 </Grid>
 
-                <TextBlock Name="lblStatus" Text="Ready" Foreground="#949BA4" FontSize="12" Margin="0,0,0,4"/>
-                <ProgressBar Name="pb" Height="4" Background="#2B2D31" Foreground="#5865F2" BorderThickness="0" Value="0" Maximum="100" Margin="0,0,0,10"/>
+                <StackPanel Grid.Row="3" Margin="0,0,0,8">
+                    <TextBlock Name="lblStatus" Text="Ready" Foreground="#949BA4" FontSize="12" Margin="0,0,0,4"/>
+                    <ProgressBar Name="pb" Height="4" Background="#2B2D31" Foreground="#5865F2" BorderThickness="0" Value="0" Maximum="100"/>
+                </StackPanel>
 
-                <TextBlock Name="lblLog" Text="Log" Foreground="#949BA4" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                <Border Name="BorderLog" Background="{DynamicResource LogBg}" BorderBrush="{DynamicResource LogBorder}" BorderThickness="1" CornerRadius="6">
-                    <TextBox Name="txtLog" Height="85" IsReadOnly="True" Background="Transparent" Foreground="{DynamicResource LogFg}" BorderThickness="0" FontFamily="Consolas, monospace" FontSize="11" Padding="8,6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" TextWrapping="Wrap"/>
+                <TextBlock Grid.Row="4" Name="lblLog" Text="Log" Foreground="#949BA4" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+
+                <Border Grid.Row="5" Name="BorderLog" Background="{DynamicResource LogBg}" BorderBrush="{DynamicResource LogBorder}" BorderThickness="1" CornerRadius="6">
+                    <TextBox Name="txtLog" IsReadOnly="True" Background="Transparent" Foreground="{DynamicResource LogFg}" BorderThickness="0" FontFamily="Consolas, monospace" FontSize="11" Padding="8,6" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" TextWrapping="Wrap"/>
                 </Border>
-            </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </Window>
@@ -353,6 +370,19 @@ function Start-WpfInstallerApp {
         if ($Host.Name -notlike "*ISE*" -and $Host.Name -notlike "*Visual Studio*") {
             [System.Environment]::Exit(0)
         }
+    })
+
+    $window.Add_Loaded({
+        $window.WindowState = 'Normal'
+        $window.Topmost = $true
+        $window.Activate()
+        $window.Focus()
+        try {
+            $helper = New-Object System.Windows.Interop.WindowInteropHelper($window)
+            if ($helper.Handle -ne [System.IntPtr]::Zero) {
+                [WinUtil.WinUtil]::SetForegroundWindow($helper.Handle)
+            }
+        } catch {}
     })
 
     $global:BrushConverter = New-Object System.Windows.Media.BrushConverter
@@ -866,6 +896,9 @@ function Start-WpfInstallerApp {
     Update-Language
     Update-Theme
 
+    $window.WindowState = 'Normal'
+    $window.Topmost = $true
+    $window.Activate()
     $window.ShowDialog() | Out-Null
 }
 
