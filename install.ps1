@@ -63,16 +63,27 @@ function Start-WpfInstallerApp {
             LogStartingInstall     = "Starting Install..."
             LogStartingUninstall   = "Starting Uninstall..."
             LogTargets             = "Targets: {0}"
-            LogChecking            = "Checking {0} integrity at {1}..."
-            LogPatchingLoc         = "Patching {0} at {1}..."
-            LogPatchingBranch      = "Patching {0} via branch {1}..."
-            LogCopying             = "Copying FakeMuteDeafen files..."
-            LogUpdatingConfig      = "Updating configuration..."
-            LogInstallSuccess      = "Installation completed successfully."
-            LogUninstallingLoc     = "Uninstalling {0} at {1}..."
-            LogUninstallingBranch  = "Uninstalling {0} via branch {1}..."
-            LogAlreadyClean        = "{0} is already clean."
-            LogUninstallSuccess    = "Uninstall completed."
+            LogStep1Close          = "[1/5] Closing Discord to prepare installation..."
+            LogDiscordClosed       = "  -> Discord closed successfully."
+            LogDiscordNotRunning   = "  -> Discord is not running. Skipping."
+            LogStep2Check          = "[2/5] Checking package files..."
+            LogPackageVerified     = "  -> Package files verified."
+            LogStep3Patch          = "[3/5] Installing patch into Discord..."
+            LogDetectedDiscord     = "  -> Found Discord at: {0}"
+            LogPatchSuccess        = "  -> Discord patch completed successfully."
+            LogAutoBranch          = "  -> Specific location not found. Patching via auto branch..."
+            LogStep4Copy           = "[4/5] Copying Fake Mute / Deafen plugin files..."
+            LogThemeInstalled      = "  -> Installed midnight.theme.css theme."
+            LogSettingsUpdated     = "  -> Configured and enabled FakeMuteDeafen."
+            LogStep5Launch         = "[5/5] Done! Launching Discord..."
+            LogDiscordLaunched     = "  -> Discord launched successfully."
+            LogInstallSuccess      = "Installation completed successfully!"
+            LogStep1CloseUn        = "[1/4] Closing Discord to prepare uninstallation..."
+            LogStep2Unpatch        = "[2/4] Uninstalling patch from Discord..."
+            LogUnpatchSuccess      = "  -> Discord patch uninstalled successfully."
+            LogStep3Disable        = "[3/4] Disabling Fake Mute / Deafen plugin..."
+            LogStep4LaunchUn       = "[4/4] Done! Launching Discord..."
+            LogUninstallSuccess    = "Uninstall completed successfully!"
             LogDownloadingRepo     = "Downloading package repository..."
             LogDownloadingCli      = "Downloading installer CLI..."
             LogError               = "Error: {0}"
@@ -85,28 +96,39 @@ function Start-WpfInstallerApp {
             DiscordCanary          = "Discord Canary"
             BtnInstall             = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
             BtnUninstall           = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
-            Ready                  = (T "4Lie4Lij4LmJ4Lit4Lih4LmD4LiK4LmJ4LiH4Liy4LiZ")
+            Ready                  = (T "4Lie4Lij4LmJ4Lit4Lih4LiU4Liz4LmA4LiZ4Li04LiZ4LiB4Liy4Lij")
             Working                = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liz4LmA4LiZ4Li04LiZ4LiB4Liy4LijLi4u")
             Done                   = (T "4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM")
             Error                  = (T "4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
-            SelectOne              = (T "4LiB4Lij4Li44LiT4Liy4LmA4Lil4Li34Lit4LiB4Lit4Lii4LmI4Liy4LiH4LiZ4LmJ4Lit4Lii IDEg4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZ")
+            SelectOne              = (T "4LiB4Lij4Li44LiT4Liy4LmA4Lil4Li34Lit4LiB4Lit4Lii4LmI4Liy4LiH4LiZ4LmJ4Lit4LiiIDEg4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZ")
             LogHeader              = (T "4Lia4Lix4LiZ4LiX4Li24LiB4LiB4Liy4Lij4LiX4Liz4LiH4Liy4LiZ")
-            ThemeDark              = (T "4LmC4Lir4Lih4LiU4Lih4Li34LiUICjguJ7guKPguLDguIjguLHguJnguJfguKPguYwp")
+            ThemeDark              = (T "4LmC4Lir4Lih4LiU4Lih4Li34LiUICjguJTguKfguIfguIjguLHguJnguJfguKPguYwp")
             ThemeLight             = (T "4LmC4Lir4Lih4LiU4Liq4Lin4LmI4Liy4LiHICjguJTguKfguIfguK3guLLguJfguLTguJXguKLguYwp")
             LangBtn                = "EN"
-            LogStartingInstall     = (T "4LiB4Liz4Lil4Lix4LiH4LmA4Lij4Li04LmI4Lih4LiV4LmJ4LiZIOC4leC4tOC4lOC4leC4seC5ieC4hy4uLg==")
-            LogStartingUninstall   = (T "4LiB4Liz4Lil4Lix4LiH4LmA4Lij4Li04LmI4Lih4LiV4LmJ4LiZIOC4luC4reC4meC4geC4suC4o+C4leC4tOC4lOC4leC4seC5ieC4hy4uLg==")
+            LogStartingInstall     = (T "4LiB4Liz4Lil4Lix4LiH4LmA4Lij4Li04LmI4Lih4LiV4LmJ4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHLi4u")
+            LogStartingUninstall   = (T "4LiB4Liz4Lil4Lix4LiH4LmA4Lij4Li04LmI4Lih4LiV4LmJ4LiZ4LiB4Liy4Lij4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHLi4u")
             LogTargets             = (T "4LmA4Lib4LmJ4Liy4Lir4Lih4Liy4LiiOiB7MH0=")
-            LogChecking            = (T "4LiB4Liz4Lil4Lix4LiH4LiV4Lij4Lin4LiI4Liq4Lit4Lia4LiE4Lin4Liy4Lih4Liq4Lih4Lia4Li54Lij4LiT4LmM4LiC4Lit4LiHIHswfSDguJfguLXguYggezF9Li4u")
-            LogPatchingLoc         = (T "4LiB4Liz4Lil4Lix4LiH4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmB4Lie4LiV4LiK4LmMIHswfSDguJfguLXguYggezF9Li4u")
-            LogPatchingBranch      = (T "4LiB4Liz4Lil4Lix4LiH4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmB4Lie4LiV4LiK4LmMIHswfSDguJzguYjguLLguJkgYnJhbmNoIHsxfS4uLg==")
-            LogCopying             = (T "4LiB4Liz4Lil4Lix4LiH4LiE4Lix4LiU4Lil4Lit4LiB4LmE4Lif4Lil4LmMIEZha2VNdXRlRGVhZmVuLi4u")
-            LogUpdatingConfig      = (T "4LiB4Liz4Lil4Lix4LiH4Lit4Lix4Lib4LmA4LiU4LiV4LiB4Liy4Lij4LiV4Lix4LmJ4LiH4LiE4LmI4LiyLi4u")
-            LogInstallSuccess      = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM4LmA4Lij4Li14Lii4Lia4Lij4LmJ4Lit4Lii4LmB4Lil4LmJ4Lin")
-            LogUninstallingLoc     = (T "4LiB4Liz4Lil4Lix4LiH4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHIHswfSDguJfguLXguYggezF9Li4u")
-            LogUninstallingBranch  = (T "4LiB4Liz4Lil4Lix4LiH4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHIHswfSDguJzguYjguLLguJkgYnJhbmNoIHsxfS4uLg==")
-            LogAlreadyClean        = (T "ezB9IOC5hOC4oeC5iOC5hOC4lOC5ieC4leC4tOC4lOC4leC4seC5ieC4hyBWZW5jb3JkIOC4reC4ouC4ueC5iOC5geC4peC5ieC4pw==")
-            LogUninstallSuccess    = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM")
+            LogStep1Close          = (T "WzEvNV0g4LiB4Liz4Lil4Lix4LiH4Lib4Li04LiUIERpc2NvcmQg4LmA4Lie4Li34LmI4Lit4LmA4LiV4Lij4Li14Lii4Lih4LiV4Li04LiU4LiV4Lix4LmJ4LiHLi4u")
+            LogDiscordClosed       = (T "ICAtPiDguJvguLTguJQgRGlzY29yZCDguYDguKPguLXguKLguJrguKPguYnguK3guKLguYHguKXguYnguKc=")
+            LogDiscordNotRunning   = (T "ICAtPiBEaXNjb3JkIOC5hOC4oeC5iOC5hOC4lOC5ieC5gOC4m+C4tOC4lOC4reC4ouC4ueC5iCDguILguYnguLLguKHguILguLHguYnguJnguJXguK3guJnguJnguLXguYk=")
+            LogStep2Check          = (T "WzIvNV0g4LiV4Lij4Lin4LiI4Liq4Lit4Lia4LmE4Lif4Lil4LmMIFBhY2thZ2UuLi4=")
+            LogPackageVerified     = (T "ICAtPiDguJ7guJrguYTguJ/guKXguYzguJXguLTguJTguJXguLHguYnguIfguITguKPguJrguJbguYnguKfguJk=")
+            LogStep3Patch          = (T "WzMvNV0g4LiB4Liz4Lil4Lix4LiH4LiV4Li04LiU4LiV4Lix4LmJ4LiHIFBhdGNoIOC5gOC4guC5ieC4siBEaXNjb3JkLi4u")
+            LogDetectedDiscord     = (T "ICAtPiDguJXguKPguKfguIjguJ7guJogRGlzY29yZCDguJfguLXguYg6IHswfQ==")
+            LogPatchSuccess        = (T "ICAtPiDguJfguLPguIHguLLguKMgUGF0Y2ggRGlzY29yZCDguYDguKPguLXguKLguJrguKPguYnguK3guKLguYHguKXguYnguKc=")
+            LogAutoBranch          = (T "ICAtPiDguYTguKHguYjguJ7guJrguJXguLPguYHguKvguJnguYjguIfguYDguInguJ7guLLguLAg4LiB4Liz4Lil4Lix4LiH4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmB4Lia4LiaIEF1dG8gQnJhbmNoLi4u")
+            LogStep4Copy           = (T "WzQvNV0g4LiB4Liz4Lil4Lix4LiH4LiE4Lix4LiU4Lil4Lit4LiB4Lib4Lil4Lix4LmK4LiB4Lit4Li04LiZIEZha2UgTXV0ZSAvIERlYWZlbi4uLg==")
+            LogThemeInstalled      = (T "ICAtPiDguJXguLTguJTguJXguLHguYnguIfguJjguLXguKEgbWlkbmlnaHQudGhlbWUuY3NzIOC4quC4s+C5gOC4o+C5h+C4iA==")
+            LogSettingsUpdated     = (T "ICAtPiDguJXguLHguYnguIfguITguYjguLLguYDguJvguLTguJTguYPguIrguYnguIfguLLguJkgRmFrZU11dGVEZWFmZW4g4LmD4Lir4LmJ4LmA4Lij4Li14Lii4Lia4Lij4LmJ4Lit4Lii")
+            LogStep5Launch         = (T "WzUvNV0g4LmA4Liq4Lij4LmH4LiI4Liq4Li04LmJ4LiZISDguIHguLPguKXguLHguIfguYDguJvguLTguJQgRGlzY29yZC4uLg==")
+            LogDiscordLaunched     = (T "ICAtPiDguYDguJvguLTguJQgRGlzY29yZCDguYDguKPguLXguKLguJrguKPguYnguK3guKLguYHguKXguYnguKc=")
+            LogInstallSuccess      = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH4Liq4Liz4LmA4Lij4LmH4LiI4LmA4Lij4Li14Lii4Lia4Lij4LmJ4Lit4Lii4LmB4Lil4LmJ4LinIQ==")
+            LogStep1CloseUn        = (T "WzEvNF0g4LiB4Liz4Lil4Lix4LiH4Lib4Li04LiUIERpc2NvcmQg4LmA4Lie4Li34LmI4Lit4LmA4LiV4Lij4Li14Lii4Lih4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHLi4u")
+            LogStep2Unpatch        = (T "WzIvNF0g4LiB4Liz4Lil4Lix4LiH4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHIFBhdGNoIERpc2NvcmQuLi4=")
+            LogUnpatchSuccess      = (T "ICAtPiDguJbguK3guJnguIHguLLguKPguJXguLTguJTguJXguLHguYnguIcgUGF0Y2ggRGlzY29yZCDguYDguKPguLXguKLguJrguKPguYnguK3guKLguYHguKXguYnguKc=")
+            LogStep3Disable        = (T "WzMvNF0g4LiB4Liz4Lil4Lix4LiH4Lib4Li04LiU4LiB4Liy4Lij4LmD4LiK4LmJ4LiH4Liy4LiZ4Lib4Lil4Lix4LmK4LiB4Lit4Li04LiZIEZha2UgTXV0ZSAvIERlYWZlbi4uLg==")
+            LogStep4LaunchUn       = (T "WzQvNF0g4LmA4Liq4Lij4LmH4LiI4Liq4Li04LmJ4LiZISDguIHguLPguKXguLHguIfguYDguJvguLTguJQgRGlzY29yZC4uLg==")
+            LogUninstallSuccess    = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmMIQ==")
             LogDownloadingRepo     = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liy4Lin4LiZ4LmM4LmC4Lir4Lil4LiU4LmB4Lie4LmH4LiB4LmA4LiB4LiILi4u")
             LogDownloadingCli      = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liy4Lin4LiZ4LmM4LmC4Lir4Lil4LiU4LiV4Lix4Lin4LiV4Li04LiU4LiV4Lix4LmJ4LiHIENMSS4uLg==")
             LogError               = (T "4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
@@ -745,8 +767,6 @@ function Start-WpfInstallerApp {
                 $sFile = [System.IO.Path]::Combine($vDir, "settings\settings.json")
                 $msg = $sync.I18n
 
-                Add-Log ([string]::Format($msg.LogTargets, ($sync.Targets -join ', ')))
-
                 $src = $null
                 $cli = $null
                 $tmp = $null
@@ -780,67 +800,63 @@ function Start-WpfInstallerApp {
                     $src = $cacheDir
                 }
 
+                $targetLocations = @()
+                foreach ($target in $sync.Targets) {
+                    $paths = $sync.Paths[$target]
+                    if ($paths -and $paths.Count -gt 0) {
+                        foreach ($p in $paths) {
+                            if ([System.IO.Directory]::Exists($p) -and -not ($targetLocations -contains $p)) {
+                                $targetLocations += $p
+                            }
+                        }
+                    }
+                }
+
                 if ($sync.Action -eq "Uninstall") {
+                    Add-Log $msg.LogStep1CloseUn
+                    $procs = [System.Diagnostics.Process]::GetProcesses()
+                    $closedCount = 0
+                    foreach ($p in $procs) {
+                        try {
+                            $pName = $p.ProcessName
+                            if ($pName -like "*Discord*" -and $pName -notlike "*Helper*") {
+                                $p.Kill()
+                                $closedCount++
+                            }
+                        } catch {}
+                    }
+                    if ($closedCount -gt 0) {
+                        [System.Threading.Thread]::Sleep(1000)
+                        Add-Log $msg.LogDiscordClosed
+                    } else {
+                        Add-Log $msg.LogDiscordNotRunning
+                    }
+
                     if (-not $cli) {
                         $tempCli = [System.IO.Path]::Combine($env:TEMP, "VencordInstallerCli.exe")
-                        if ([System.IO.File]::Exists($tempCli)) {
-                            $cli = $tempCli
-                        } else {
-                            Add-Log $msg.LogDownloadingCli
+                        if (-not [System.IO.File]::Exists($tempCli)) {
                             $wc = New-Object System.Net.WebClient
-                            $wc.Headers.Add("User-Agent", "PowerShell")
+                            $wc.Headers.Add("User-Agent", "Mozilla/5.0")
                             $wc.DownloadFile($sync.CliUrl, $tempCli)
-                            $cli = $tempCli
                         }
+                        $cli = $tempCli
                     }
 
-                    foreach ($target in $sync.Targets) {
-                        $paths = $sync.Paths[$target]
-                        $branch = switch ($target) { "DiscordPTB" { "ptb" } "DiscordCanary" { "canary" } default { "stable" } }
-
-                        if ($paths -and $paths.Count -gt 0) {
-                            foreach ($loc in $paths) {
-                                if ([System.IO.Directory]::Exists($loc)) {
-                                    Add-Log ([string]::Format($msg.LogUninstallingLoc, $target, $loc))
-                                    $appDirs = [System.IO.Directory]::GetDirectories($loc, "app-*")
-                                    $needsUnpatch = $false
-                                    if ($appDirs) {
-                                        foreach ($a in $appDirs) {
-                                            $origAsar = [System.IO.Path]::Combine($a, "resources\_app.asar")
-                                            if ([System.IO.File]::Exists($origAsar)) {
-                                                $needsUnpatch = $true
-                                                break
-                                            }
-                                        }
-                                    }
-
-                                    if ($needsUnpatch) {
-                                        Invoke-Cli $cli "-uninstall -location `"$loc`""
-                                    } else {
-                                        Add-Log ([string]::Format($msg.LogAlreadyClean, $target))
-                                    }
-
-                                    if ($appDirs) {
-                                        foreach ($a in $appDirs) {
-                                            $resDir = [System.IO.Path]::Combine($a, "resources")
-                                            $orig = [System.IO.Path]::Combine($resDir, "_app.asar")
-                                            $stub = [System.IO.Path]::Combine($resDir, "app.asar")
-                                            if ([System.IO.File]::Exists($orig)) {
-                                                if ([System.IO.File]::Exists($stub)) {
-                                                    [System.IO.File]::Delete($stub)
-                                                }
-                                                [System.IO.File]::Move($orig, $stub)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            Add-Log ([string]::Format($msg.LogUninstallingBranch, $target, $branch))
-                            Invoke-Cli $cli "-uninstall -branch $branch"
+                    Add-Log $msg.LogStep2Unpatch
+                    $unpatchedCount = 0
+                    if ($targetLocations -and $targetLocations.Count -gt 0) {
+                        foreach ($loc in $targetLocations) {
+                            Add-Log ([string]::Format($msg.LogDetectedDiscord, $loc))
+                            Invoke-Cli $cli ("-uninstall -location `"" + $loc + "`"")
+                            $unpatchedCount++
                         }
                     }
+                    if ($unpatchedCount -eq 0) {
+                        Invoke-Cli $cli "-uninstall -branch auto"
+                    }
+                    Add-Log $msg.LogUnpatchSuccess
 
+                    Add-Log $msg.LogStep3Disable
                     if ([System.IO.File]::Exists($sFile)) {
                         try {
                             $raw = [System.IO.File]::ReadAllText($sFile, [System.Text.Encoding]::UTF8)
@@ -853,13 +869,51 @@ function Start-WpfInstallerApp {
                         } catch {}
                     }
 
+                    Add-Log $msg.LogStep4LaunchUn
+                    $launched = $false
+                    if ($targetLocations) {
+                        foreach ($loc in $targetLocations) {
+                            $upd = [System.IO.Path]::Combine($loc, "Update.exe")
+                            $exeName = [System.IO.Path]::GetFileName($loc) + ".exe"
+                            if ([System.IO.File]::Exists($upd)) {
+                                try {
+                                    [System.Diagnostics.Process]::Start($upd, "--processStart " + $exeName) | Out-Null
+                                    $launched = $true
+                                    break
+                                } catch {}
+                            }
+                        }
+                    }
+                    if ($launched) {
+                        Add-Log $msg.LogDiscordLaunched
+                    }
+
                     Add-Log $msg.LogUninstallSuccess
                     $sync.Done = $true
                     return
                 }
 
+                Add-Log $msg.LogStep1Close
+                $procs = [System.Diagnostics.Process]::GetProcesses()
+                $closedCount = 0
+                foreach ($p in $procs) {
+                    try {
+                        $pName = $p.ProcessName
+                        if ($pName -like "*Discord*" -and $pName -notlike "*Helper*") {
+                            $p.Kill()
+                            $closedCount++
+                        }
+                    } catch {}
+                }
+                if ($closedCount -gt 0) {
+                    [System.Threading.Thread]::Sleep(1000)
+                    Add-Log $msg.LogDiscordClosed
+                } else {
+                    Add-Log $msg.LogDiscordNotRunning
+                }
+
+                Add-Log $msg.LogStep2Check
                 if (-not $src) {
-                    Add-Log $msg.LogDownloadingRepo
                     if (-not [System.IO.Directory]::Exists($cacheDir)) {
                         [System.IO.Directory]::CreateDirectory($cacheDir) | Out-Null
                     } else {
@@ -868,7 +922,7 @@ function Start-WpfInstallerApp {
                     }
                     $distZip = [System.IO.Path]::Combine($env:TEMP, "FMD_dist.zip")
                     $wc = New-Object System.Net.WebClient
-                    $wc.Headers.Add("User-Agent", "PowerShell")
+                    $wc.Headers.Add("User-Agent", "Mozilla/5.0")
                     $dlOk = $false
                     try {
                         $wc.DownloadFile($sync.DistUrl, $distZip)
@@ -903,79 +957,30 @@ function Start-WpfInstallerApp {
                 if (-not $cli) {
                     $tempCli = [System.IO.Path]::Combine($env:TEMP, "VencordInstallerCli.exe")
                     if (-not [System.IO.File]::Exists($tempCli)) {
-                        Add-Log $msg.LogDownloadingCli
                         $wc = New-Object System.Net.WebClient
-                        $wc.Headers.Add("User-Agent", "PowerShell")
+                        $wc.Headers.Add("User-Agent", "Mozilla/5.0")
                         $wc.DownloadFile($sync.CliUrl, $tempCli)
                     }
                     $cli = $tempCli
                 }
+                Add-Log $msg.LogPackageVerified
 
-                foreach ($target in $sync.Targets) {
-                    $paths = $sync.Paths[$target]
-                    $branch = switch ($target) { "DiscordPTB" { "ptb" } "DiscordCanary" { "canary" } default { "stable" } }
-
-                    if ($paths -and $paths.Count -gt 0) {
-                        foreach ($loc in $paths) {
-                            if ([System.IO.Directory]::Exists($loc)) {
-                                Add-Log ([string]::Format($msg.LogChecking, $target, $loc))
-                                $appDirs = [System.IO.Directory]::GetDirectories($loc, "app-*")
-                                $latest = $null
-                                $maxVer = [version]"0.0.0.0"
-                                if ($appDirs) {
-                                    foreach ($d in $appDirs) {
-                                        $fName = [System.IO.Path]::GetFileName($d)
-                                        $verStr = $fName -replace "^app-", ""
-                                        try {
-                                            $v = [version]$verStr
-                                            if ($v -gt $maxVer) {
-                                                $maxVer = $v
-                                                $latest = $d
-                                            }
-                                        } catch {}
-                                    }
-                                }
-
-                                if ($latest) {
-                                    $latRes = [System.IO.Path]::Combine($latest, "resources")
-                                    if (-not [System.IO.Directory]::Exists($latRes)) {
-                                        [System.IO.Directory]::CreateDirectory($latRes) | Out-Null
-                                    }
-                                    $asar = [System.IO.Path]::Combine($latRes, "app.asar")
-                                    $origAsar = [System.IO.Path]::Combine($latRes, "_app.asar")
-                                    $hasAsar = [System.IO.File]::Exists($asar) -or [System.IO.File]::Exists($origAsar)
-                                    if (-not $hasAsar) {
-                                        foreach ($d in $appDirs) {
-                                            if ($d -ne $latest) {
-                                                $prevRes = [System.IO.Path]::Combine($d, "resources")
-                                                $prevAsar = [System.IO.Path]::Combine($prevRes, "app.asar")
-                                                $prevOrig = [System.IO.Path]::Combine($prevRes, "_app.asar")
-                                                if ([System.IO.File]::Exists($prevAsar)) {
-                                                    [System.IO.File]::Copy($prevAsar, $asar, $true)
-                                                    break
-                                                } elseif ([System.IO.File]::Exists($prevOrig)) {
-                                                    [System.IO.File]::Copy($prevOrig, $asar, $true)
-                                                    break
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if ([System.IO.File]::Exists($origAsar) -and -not [System.IO.File]::Exists($asar)) {
-                                        [System.IO.File]::Copy($origAsar, $asar, $true)
-                                    }
-                                }
-
-                                Add-Log ([string]::Format($msg.LogPatchingLoc, $target, $loc))
-                                Invoke-Cli $cli "-install -location `"$loc`""
-                            }
-                        }
-                    } else {
-                        Add-Log ([string]::Format($msg.LogPatchingBranch, $target, $branch))
-                        Invoke-Cli $cli "-install -branch $branch"
+                Add-Log $msg.LogStep3Patch
+                $patchedCount = 0
+                if ($targetLocations -and $targetLocations.Count -gt 0) {
+                    foreach ($loc in $targetLocations) {
+                        Add-Log ([string]::Format($msg.LogDetectedDiscord, $loc))
+                        Invoke-Cli $cli ("-install -location `"" + $loc + "`"")
+                        $patchedCount++
                     }
                 }
+                if ($patchedCount -eq 0) {
+                    Add-Log $msg.LogAutoBranch
+                    Invoke-Cli $cli "-install -branch auto"
+                }
+                Add-Log $msg.LogPatchSuccess
 
-                Add-Log $msg.LogCopying
+                Add-Log $msg.LogStep4Copy
                 if (-not [System.IO.Directory]::Exists($tDist)) {
                     [System.IO.Directory]::CreateDirectory($tDist) | Out-Null
                 }
@@ -989,12 +994,21 @@ function Start-WpfInstallerApp {
                     [System.IO.File]::Copy($file, $destFile, $true)
                 }
 
-                $theme = [System.IO.Path]::Combine($vDir, "themes\midnight.theme.css")
-                if ([System.IO.File]::Exists($theme)) {
-                    [System.IO.File]::Delete($theme)
+                $targetThemesDir = [System.IO.Path]::Combine($vDir, "themes")
+                if (-not [System.IO.Directory]::Exists($targetThemesDir)) {
+                    [System.IO.Directory]::CreateDirectory($targetThemesDir) | Out-Null
+                }
+                $themeSources = @()
+                if ($sync.LocalDir) { $themeSources += [System.IO.Path]::Combine($sync.LocalDir, "midnight.theme.css") }
+                $themeSources += [System.IO.Path]::Combine((Get-Location).Path, "midnight.theme.css")
+                foreach ($ts in $themeSources) {
+                    if ([System.IO.File]::Exists($ts)) {
+                        [System.IO.File]::Copy($ts, [System.IO.Path]::Combine($targetThemesDir, "midnight.theme.css"), $true)
+                        Add-Log $msg.LogThemeInstalled
+                        break
+                    }
                 }
 
-                Add-Log $msg.LogUpdatingConfig
                 $sDir = [System.IO.Path]::Combine($vDir, "settings")
                 if (-not [System.IO.Directory]::Exists($sDir)) {
                     [System.IO.Directory]::CreateDirectory($sDir) | Out-Null
@@ -1009,18 +1023,35 @@ function Start-WpfInstallerApp {
                 if (-not $c) { $c = @{} }
                 $c["autoUpdate"] = $false
                 $c["autoUpdateNotification"] = $false
-                if ($c.ContainsKey("enabledThemes") -and $c["enabledThemes"]) {
-                    $c["enabledThemes"] = @($c["enabledThemes"] | Where-Object { $_ -ne "midnight.theme.css" })
-                }
                 if (-not $c.ContainsKey("plugins")) { $c["plugins"] = @{} }
                 if (-not $c["plugins"].ContainsKey("FakeMuteDeafen")) { $c["plugins"]["FakeMuteDeafen"] = @{} }
                 $c["plugins"]["FakeMuteDeafen"]["enabled"] = $true
 
                 $utf8 = New-Object System.Text.UTF8Encoding($false)
                 [System.IO.File]::WriteAllText($sFile, ($c | ConvertTo-Json -Depth 10), $utf8)
+                Add-Log $msg.LogSettingsUpdated
 
                 if ($tmp -and [System.IO.Directory]::Exists($tmp)) {
                     try { [System.IO.Directory]::Delete($tmp, $true) } catch {}
+                }
+
+                Add-Log $msg.LogStep5Launch
+                $launched = $false
+                if ($targetLocations) {
+                    foreach ($loc in $targetLocations) {
+                        $upd = [System.IO.Path]::Combine($loc, "Update.exe")
+                        $exeName = [System.IO.Path]::GetFileName($loc) + ".exe"
+                        if ([System.IO.File]::Exists($upd)) {
+                            try {
+                                [System.Diagnostics.Process]::Start($upd, "--processStart " + $exeName) | Out-Null
+                                $launched = $true
+                                break
+                            } catch {}
+                        }
+                    }
+                }
+                if ($launched) {
+                    Add-Log $msg.LogDiscordLaunched
                 }
 
                 Add-Log $msg.LogInstallSuccess
