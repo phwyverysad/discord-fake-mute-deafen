@@ -44,40 +44,72 @@ function Start-WpfInstallerApp {
 
     $global:i18n = @{
         EN = @{
-            Title         = "FakeMuteDeafen"
-            SelectTargets = "Discord Versions"
-            Discord       = "Discord"
-            DiscordPTB    = "Discord PTB"
-            DiscordCanary = "Discord Canary"
-            BtnInstall    = "Install"
-            BtnUninstall  = "Uninstall"
-            Ready         = "Ready"
-            Working       = "Working..."
-            Done          = "Done"
-            Error         = "Error: {0}"
-            SelectOne     = "Please select at least 1 version."
-            LogHeader     = "Log"
-            ThemeDark     = "Dark"
-            ThemeLight    = "Light"
-            LangBtn       = "TH"
+            Title                  = "FakeMuteDeafen"
+            SelectTargets          = "Discord Versions"
+            Discord                = "Discord"
+            DiscordPTB             = "Discord PTB"
+            DiscordCanary          = "Discord Canary"
+            BtnInstall             = "Install"
+            BtnUninstall           = "Uninstall"
+            Ready                  = "Ready"
+            Working                = "Working..."
+            Done                   = "Done"
+            Error                  = "Error: {0}"
+            SelectOne              = "Please select at least 1 version."
+            LogHeader              = "Log"
+            ThemeDark              = "Dark (Moon)"
+            ThemeLight             = "Light (Sun)"
+            LangBtn                = "TH"
+            LogStartingInstall     = "Starting Install..."
+            LogStartingUninstall   = "Starting Uninstall..."
+            LogTargets             = "Targets: {0}"
+            LogChecking            = "Checking {0} integrity at {1}..."
+            LogPatchingLoc         = "Patching {0} at {1}..."
+            LogPatchingBranch      = "Patching {0} via branch {1}..."
+            LogCopying             = "Copying FakeMuteDeafen files..."
+            LogUpdatingConfig      = "Updating configuration..."
+            LogInstallSuccess      = "Installation completed successfully."
+            LogUninstallingLoc     = "Uninstalling {0} at {1}..."
+            LogUninstallingBranch  = "Uninstalling {0} via branch {1}..."
+            LogAlreadyClean        = "{0} is already clean."
+            LogUninstallSuccess    = "Uninstall completed."
+            LogDownloadingRepo     = "Downloading package repository..."
+            LogDownloadingCli      = "Downloading installer CLI..."
+            LogError               = "Error: {0}"
         }
         TH = @{
-            Title         = "FakeMuteDeafen"
-            SelectTargets = (T "4LmA4Lil4Li34Lit4LiB4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZIERpc2NvcmQ=")
-            Discord       = "Discord"
-            DiscordPTB    = "Discord PTB"
-            DiscordCanary = "Discord Canary"
-            BtnInstall    = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
-            BtnUninstall  = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
-            Ready         = (T "4Lie4Lij4LmJ4Lit4Lih4LmD4LiK4LmJ4LiH4Liy4LiZ")
-            Working       = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liz4LmA4LiZ4Li04LiZ4LiB4Liy4LijLi4u")
-            Done          = (T "4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM")
-            Error         = (T "4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
-            SelectOne     = (T "4LiB4Lij4Li44LiT4Liy4LmA4Lil4Li34Lit4LiB4Lit4Lii4LmI4Liy4LiH4LiZ4LmJ4Lit4Lii IDEg4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZ")
-            LogHeader     = (T "4Lia4Lix4LiZ4LiX4Li24LiB4LiB4Liy4Lij4LiX4Liz4LiH4Liy4LiZ")
-            ThemeDark     = (T "4Lih4Li34LiU")
-            ThemeLight    = (T "4Liq4Lin4LmI4Liy4LiH")
-            LangBtn       = "EN"
+            Title                  = "FakeMuteDeafen"
+            SelectTargets          = (T "4LmA4Lil4Li34Lit4LiB4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZIERpc2NvcmQ=")
+            Discord                = "Discord"
+            DiscordPTB             = "Discord PTB"
+            DiscordCanary          = "Discord Canary"
+            BtnInstall             = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
+            BtnUninstall           = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH")
+            Ready                  = (T "4Lie4Lij4LmJ4Lit4Lih4LmD4LiK4LmJ4LiH4Liy4LiZ")
+            Working                = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liz4LmA4LiZ4Li04LiZ4LiB4Liy4LijLi4u")
+            Done                   = (T "4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM")
+            Error                  = (T "4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
+            SelectOne              = (T "4LiB4Lij4Li44LiT4Liy4LmA4Lil4Li34Lit4LiB4Lit4Lii4LmI4Liy4LiH4LiZ4LmJ4Lit4Lii IDEg4LmA4Lin4Lit4Lij4LmM4LiK4Lix4LiZ")
+            LogHeader              = (T "4Lia4Lix4LiZ4LiX4Li24LiB4LiB4Liy4Lij4LiX4Liz4LiH4Liy4LiZ")
+            ThemeDark              = (T "4LmC4Lir4Lih4LiU4Lih4Li34LiUICjguJ7guKPguLDguIjguLHguJnguJfguKPguYwp")
+            ThemeLight             = (T "4LmC4Lir4Lih4LiU4Liq4Lin4LmI4Liy4LiHICjguJTguKfguIfguK3guLLguJfguLTguJXguKLguYwp")
+            LangBtn                = "EN"
+            LogStartingInstall     = (T "4LiB4Liz4Lil4Lix4LiH4LmA4Lij4Li04LmI4Lih4LiV4LmJ4LiZIOC4leC4tOC4lOC4leC4seC5ieC4hy4uLg==")
+            LogStartingUninstall   = (T "4LiB4Liz4Lil4Lix4LiH4LmA4Lij4Li04LmI4Lih4LiV4LmJ4LiZIOC4luC4reC4meC4geC4suC4o+C4leC4tOC4lOC4leC4seC5ieC4hy4uLg==")
+            LogTargets             = (T "4LmA4Lib4LmJ4Liy4Lir4Lih4Liy4LiiOiB7MH0=")
+            LogChecking            = (T "4LiB4Liz4Lil4Lix4LiH4LiV4Lij4Lin4LiI4Liq4Lit4Lia4LiE4Lin4Liy4Lih4Liq4Lih4Lia4Li54Lij4LiT4LmM4LiC4Lit4LiHIHswfSDguJfguLXguYggezF9Li4u")
+            LogPatchingLoc         = (T "4LiB4Liz4Lil4Lix4LiH4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmB4Lie4LiV4LiK4LmMIHswfSDguJfguLXguYggezF9Li4u")
+            LogPatchingBranch      = (T "4LiB4Liz4Lil4Lix4LiH4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmB4Lie4LiV4LiK4LmMIHswfSDguJzguYjguLLguJkgYnJhbmNoIHsxfS4uLg==")
+            LogCopying             = (T "4LiB4Liz4Lil4Lix4LiH4LiE4Lix4LiU4Lil4Lit4LiB4LmE4Lif4Lil4LmMIEZha2VNdXRlRGVhZmVuLi4u")
+            LogUpdatingConfig      = (T "4LiB4Liz4Lil4Lix4LiH4Lit4Lix4Lib4LmA4LiU4LiV4LiB4Liy4Lij4LiV4Lix4LmJ4LiH4LiE4LmI4LiyLi4u")
+            LogInstallSuccess      = (T "4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM4LmA4Lij4Li14Lii4Lia4Lij4LmJ4Lit4Lii4LmB4Lil4LmJ4Lin")
+            LogUninstallingLoc     = (T "4LiB4Liz4Lil4Lix4LiH4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHIHswfSDguJfguLXguYggezF9Li4u")
+            LogUninstallingBranch  = (T "4LiB4Liz4Lil4Lix4LiH4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiHIHswfSDguJzguYjguLLguJkgYnJhbmNoIHsxfS4uLg==")
+            LogAlreadyClean        = (T "ezB9IOC5hOC4oeC5iOC5hOC4lOC5ieC4leC4tOC4lOC4leC4seC5ieC4hyBWZW5jb3JkIOC4reC4ouC4ueC5iOC5geC4peC5ieC4pw==")
+            LogUninstallSuccess    = (T "4LiW4Lit4LiZ4LiB4Liy4Lij4LiV4Li04LiU4LiV4Lix4LmJ4LiH4LmA4Liq4Lij4LmH4LiI4Liq4Lih4Lia4Li54Lij4LiT4LmM")
+            LogDownloadingRepo     = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liy4Lin4LiZ4LmM4LmC4Lir4Lil4LiU4LmB4Lie4LmH4LiB4LmA4LiB4LiILi4u")
+            LogDownloadingCli      = (T "4LiB4Liz4Lil4Lix4LiH4LiU4Liy4Lin4LiZ4LmM4LmC4Lir4Lil4LiU4LiV4Lix4Lin4LiV4Li04LiU4LiV4Lix4LmJ4LiHIENMSS4uLg==")
+            LogError               = (T "4LiC4LmJ4Lit4Lic4Li04LiU4Lie4Lil4Liy4LiUOiB7MH0=")
         }
     }
 
@@ -263,7 +295,7 @@ function Start-WpfInstallerApp {
                     <TextBlock Name="txtTitle" Text="FakeMuteDeafen" Foreground="#F2F3F5" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
 
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Name="btnTheme" Style="{StaticResource BtnWin}" Content="Light" Margin="0,0,4,0"/>
+                        <Button Name="btnTheme" Style="{StaticResource BtnWin}" Margin="0,0,4,0" Width="28"><Path Name="pathThemeIcon" Width="14" Height="14" Stretch="Uniform" Stroke="#949BA4" StrokeThickness="1.8" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" HorizontalAlignment="Center" VerticalAlignment="Center"/></Button>
                         <Button Name="btnLang" Style="{StaticResource BtnWin}" Content="TH" Margin="0,0,4,0"/>
                         <Button Name="btnMin" Style="{StaticResource BtnWin}" Content="-" Margin="0,0,2,0" Width="26"/>
                         <Button Name="btnClose" Style="{StaticResource BtnWin}" Content="X" Width="26"/>
@@ -332,36 +364,69 @@ function Start-WpfInstallerApp {
     $reader = New-Object System.Xml.XmlNodeReader $xaml
     $window = [System.Windows.Markup.XamlReader]::Load($reader)
 
-    $MainBorder       = $window.FindName("MainBorder")
-    $TitleBar         = $window.FindName("TitleBar")
-    $txtTitle         = $window.FindName("txtTitle")
-    $btnTheme         = $window.FindName("btnTheme")
-    $btnLang          = $window.FindName("btnLang")
-    $btnMin           = $window.FindName("btnMin")
-    $btnClose         = $window.FindName("btnClose")
+    $script:MainBorder       = $window.FindName("MainBorder")
+    $script:TitleBar         = $window.FindName("TitleBar")
+    $script:txtTitle         = $window.FindName("txtTitle")
+    $script:btnTheme         = $window.FindName("btnTheme")
+    $script:pathThemeIcon    = $window.FindName("pathThemeIcon")
+    $script:btnLang          = $window.FindName("btnLang")
+    $script:btnMin           = $window.FindName("btnMin")
+    $script:btnClose         = $window.FindName("btnClose")
 
-    $lblSelectTargets = $window.FindName("lblSelectTargets")
-    $chkStable        = $window.FindName("chkStable")
-    $chkPTB           = $window.FindName("chkPTB")
-    $chkCanary        = $window.FindName("chkCanary")
+    $script:lblSelectTargets = $window.FindName("lblSelectTargets")
+    $script:chkStable        = $window.FindName("chkStable")
+    $script:chkPTB           = $window.FindName("chkPTB")
+    $script:chkCanary        = $window.FindName("chkCanary")
 
-    $imgStable        = $window.FindName("imgStable")
-    $imgPTB           = $window.FindName("imgPTB")
-    $imgCanary        = $window.FindName("imgCanary")
+    $script:imgStable        = $window.FindName("imgStable")
+    $script:imgPTB           = $window.FindName("imgPTB")
+    $script:imgCanary        = $window.FindName("imgCanary")
 
-    $txtStable        = $window.FindName("txtStable")
-    $txtPTB           = $window.FindName("txtPTB")
-    $txtCanary        = $window.FindName("txtCanary")
+    $script:txtStable        = $window.FindName("txtStable")
+    $script:txtPTB           = $window.FindName("txtPTB")
+    $script:txtCanary        = $window.FindName("txtCanary")
 
-    $btnInstall       = $window.FindName("btnInstall")
-    $btnUninstall     = $window.FindName("btnUninstall")
+    $script:btnInstall       = $window.FindName("btnInstall")
+    $script:btnUninstall     = $window.FindName("btnUninstall")
 
-    $lblStatus        = $window.FindName("lblStatus")
-    $pb               = $window.FindName("pb")
+    $script:lblStatus        = $window.FindName("lblStatus")
+    $script:pb               = $window.FindName("pb")
 
-    $lblLog           = $window.FindName("lblLog")
-    $BorderLog        = $window.FindName("BorderLog")
-    $txtLog           = $window.FindName("txtLog")
+    $script:lblLog           = $window.FindName("lblLog")
+    $script:BorderLog        = $window.FindName("BorderLog")
+    $script:txtLog           = $window.FindName("txtLog")
+
+    $MainBorder       = $script:MainBorder
+    $TitleBar         = $script:TitleBar
+    $txtTitle         = $script:txtTitle
+    $btnTheme         = $script:btnTheme
+    $pathThemeIcon    = $script:pathThemeIcon
+    $btnLang          = $script:btnLang
+    $btnMin           = $script:btnMin
+    $btnClose         = $script:btnClose
+
+    $lblSelectTargets = $script:lblSelectTargets
+    $chkStable        = $script:chkStable
+    $chkPTB           = $script:chkPTB
+    $chkCanary        = $script:chkCanary
+
+    $imgStable        = $script:imgStable
+    $imgPTB           = $script:imgPTB
+    $imgCanary        = $script:imgCanary
+
+    $txtStable        = $script:txtStable
+    $txtPTB           = $script:txtPTB
+    $txtCanary        = $script:txtCanary
+
+    $btnInstall       = $script:btnInstall
+    $btnUninstall     = $script:btnUninstall
+
+    $lblStatus        = $script:lblStatus
+    $pb               = $script:pb
+
+    $lblLog           = $script:lblLog
+    $BorderLog        = $script:BorderLog
+    $txtLog           = $script:txtLog
 
     $TitleBar.Add_MouseLeftButtonDown({ $window.DragMove() })
     $btnMin.Add_Click({ $window.WindowState = 'Minimized' })
@@ -386,8 +451,13 @@ function Start-WpfInstallerApp {
     })
 
     $global:BrushConverter = New-Object System.Windows.Media.BrushConverter
-    function Get-Brush($hex) {
+    $global:GeomSun  = [System.Windows.Media.Geometry]::Parse("M12,8 A4,4 0 1,0 12,16 A4,4 0 1,0 12,8 Z M12,2 L12,4 M12,20 L12,22 M2,12 L4,12 M20,12 L22,12 M4.93,4.93 L6.34,6.34 M17.66,17.66 L19.07,19.07 M4.93,19.07 L6.34,17.66 M17.66,6.34 L19.07,4.93")
+    $global:GeomMoon = [System.Windows.Media.Geometry]::Parse("M12,3 A6,6 0 0,0 21,12 A9,9 0 1,1 12,3 Z")
+    function script:Get-Brush($hex) {
         return $global:BrushConverter.ConvertFromString($hex)
+    }
+    function Get-Brush($hex) {
+        return script:Get-Brush $hex
     }
 
     function Get-IconBmp($paths, $b64) {
@@ -422,6 +492,7 @@ function Start-WpfInstallerApp {
 
     $ctxDir = $null
     if ($PSScriptRoot) { $ctxDir = $PSScriptRoot } elseif ($MyInvocation.MyCommand.Path) { $ctxDir = Split-Path -Parent $MyInvocation.MyCommand.Path }
+    if (-not $ctxDir -and (Test-Path (Join-Path (Get-Location).Path "dist\patcher.js"))) { $ctxDir = (Get-Location).Path }
 
     $pathsStable = @((Join-Path (Get-Location).Path "discord.png"))
     if ($ctxDir) { $pathsStable += (Join-Path $ctxDir "discord.png") }
@@ -441,28 +512,37 @@ function Start-WpfInstallerApp {
         foreach ($k in $thm.Keys) {
             $window.Resources[$k] = Get-Brush $thm[$k]
         }
-        $MainBorder.Background  = Get-Brush $thm.WindowBg
-        $MainBorder.BorderBrush = Get-Brush $thm.WindowBorder
-        $TitleBar.Background    = Get-Brush $thm.TitleBg
-        $txtTitle.Foreground    = Get-Brush $thm.TitleFg
-        $btnTheme.Foreground    = Get-Brush $thm.BtnWinFg
-        $btnLang.Foreground     = Get-Brush $thm.BtnWinFg
-        $btnMin.Foreground      = Get-Brush $thm.BtnWinFg
-        $btnClose.Foreground     = Get-Brush $thm.BtnWinFg
+        $MainBorder.Background       = Get-Brush $thm.WindowBg
+        $MainBorder.BorderBrush      = Get-Brush $thm.WindowBorder
+        $TitleBar.Background         = Get-Brush $thm.TitleBg
+        $txtTitle.Foreground         = Get-Brush $thm.TitleFg
+        $btnTheme.Foreground         = Get-Brush $thm.BtnWinFg
+        $pathThemeIcon.Stroke        = Get-Brush $thm.BtnWinFg
+        $btnLang.Foreground          = Get-Brush $thm.BtnWinFg
+        $btnMin.Foreground           = Get-Brush $thm.BtnWinFg
+        $btnClose.Foreground         = Get-Brush $thm.BtnWinFg
         $lblSelectTargets.Foreground = Get-Brush $thm.TextMuted
-        $lblStatus.Foreground   = Get-Brush $thm.TextMuted
-        $lblLog.Foreground      = Get-Brush $thm.TextMuted
-        $pb.Background          = Get-Brush $thm.PbTrack
+        $lblStatus.Foreground        = Get-Brush $thm.TextMuted
+        $lblLog.Foreground           = Get-Brush $thm.TextMuted
+        $pb.Background               = Get-Brush $thm.PbTrack
+        $BorderLog.Background        = Get-Brush $thm.LogBg
+        $BorderLog.BorderBrush       = Get-Brush $thm.LogBorder
+        $txtLog.Foreground           = Get-Brush $thm.LogFg
+        $txtStable.Foreground        = Get-Brush $thm.TextPrimary
+        $txtPTB.Foreground           = Get-Brush $thm.TextPrimary
+        $txtCanary.Foreground        = Get-Brush $thm.TextPrimary
 
-        Update-ThemeBtnText
+        Update-ThemeBtn
     }
 
-    function Update-ThemeBtnText {
+    function Update-ThemeBtn {
         $d = $global:i18n[$global:CurrentLang]
         if ($global:CurrentTheme -eq "Dark") {
-            $btnTheme.Content = $d.ThemeLight
+            $pathThemeIcon.Data = $global:GeomMoon
+            $btnTheme.ToolTip   = $d.ThemeDark
         } else {
-            $btnTheme.Content = $d.ThemeDark
+            $pathThemeIcon.Data = $global:GeomSun
+            $btnTheme.ToolTip   = $d.ThemeLight
         }
     }
 
@@ -478,7 +558,7 @@ function Start-WpfInstallerApp {
         $btnUninstall.Content     = $d.BtnUninstall
         $lblStatus.Text           = $d.Ready
         $lblLog.Text              = $d.LogHeader
-        Update-ThemeBtnText
+        Update-ThemeBtn
     }
 
     $btnTheme.Add_Click({
@@ -522,45 +602,57 @@ function Start-WpfInstallerApp {
         $chkStable.IsChecked = $true
     }
 
+    function script:Set-State($en) {
+        $script:btnInstall.IsEnabled   = $en
+        $script:btnUninstall.IsEnabled = $en
+        $script:chkStable.IsEnabled    = $en
+        $script:chkPTB.IsEnabled       = $en
+        $script:chkCanary.IsEnabled    = $en
+        $script:btnTheme.IsEnabled     = $en
+        $script:btnLang.IsEnabled      = $en
+    }
     function Set-State($en) {
-        $btnInstall.IsEnabled   = $en
-        $btnUninstall.IsEnabled = $en
-        $chkStable.IsEnabled    = $en
-        $chkPTB.IsEnabled       = $en
-        $chkCanary.IsEnabled    = $en
-        $btnTheme.IsEnabled     = $en
-        $btnLang.IsEnabled      = $en
+        script:Set-State $en
     }
 
     function Run-Action($action) {
         $selected = @()
-        if ($chkStable.IsChecked) { $selected += "Discord" }
-        if ($chkPTB.IsChecked) { $selected += "DiscordPTB" }
-        if ($chkCanary.IsChecked) { $selected += "DiscordCanary" }
+        if ($script:chkStable.IsChecked) { $selected += "Discord" }
+        if ($script:chkPTB.IsChecked) { $selected += "DiscordPTB" }
+        if ($script:chkCanary.IsChecked) { $selected += "DiscordCanary" }
 
         if ($selected.Count -eq 0) {
-            $lblStatus.Text = $global:i18n[$global:CurrentLang].SelectOne
-            $lblStatus.Foreground = Get-Brush "#F23F43"
+            $script:lblStatus.Text = $global:i18n[$global:CurrentLang].SelectOne
+            $script:lblStatus.Foreground = script:Get-Brush "#F23F43"
             return
         }
 
-        Set-State $false
-        $pb.Value = 0
-        $pb.IsIndeterminate = $true
-        $lblStatus.Text = $global:i18n[$global:CurrentLang].Working
-        $lblStatus.Foreground = Get-Brush $global:Themes[$global:CurrentTheme].TextMuted
+        script:Set-State $false
+        $script:pb.Value = 0
+        $script:pb.IsIndeterminate = $true
+        $script:lblStatus.Text = $global:i18n[$global:CurrentLang].Working
+        $script:lblStatus.Foreground = script:Get-Brush $global:Themes[$global:CurrentTheme].TextMuted
 
-        $txtLog.AppendText("[$([DateTime]::Now.ToString('HH:mm:ss'))] Starting $action...`r`n")
+        $d = $global:i18n[$global:CurrentLang]
+        $startMsg = if ($action -eq "Install") { $d.LogStartingInstall } else { $d.LogStartingUninstall }
+        $txtLog.AppendText("[$([DateTime]::Now.ToString('HH:mm:ss'))] $startMsg`r`n")
         $txtLog.ScrollToEnd()
+
+        $script:txtLog    = $txtLog
+        $script:lblStatus = $lblStatus
+        $script:pb        = $pb
 
         $ctxDir = $null
         if ($PSScriptRoot) { $ctxDir = $PSScriptRoot } elseif ($MyInvocation.MyCommand.Path) { $ctxDir = Split-Path -Parent $MyInvocation.MyCommand.Path }
+        if (-not $ctxDir -and (Test-Path (Join-Path (Get-Location).Path "dist\patcher.js"))) { $ctxDir = (Get-Location).Path }
 
         $sync = [hashtable]::Synchronized(@{
             Action   = $action
             Targets  = $selected
             Paths    = (Get-DiscordPaths)
             LocalDir = $ctxDir
+            Lang     = $global:CurrentLang
+            I18n     = $global:i18n[$global:CurrentLang]
             RepoUrl  = "https://github.com/phwyverysad/discord-fake-mute-deafen/archive/refs/heads/main.zip"
             CliUrl   = "https://github.com/Vencord/Installer/releases/latest/download/VencordInstallerCli.exe"
             Logs     = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
@@ -576,23 +668,30 @@ function Start-WpfInstallerApp {
                 $null = $sync.Logs.Add("[$ts] $msg")
             }
 
+            function Invoke-Cli($cliExe, $cliArgs) {
+                $tOut = [System.IO.Path]::GetTempFileName()
+                & cmd.exe /c "`"$cliExe`" $cliArgs > `"$tOut`" 2>&1"
+                if (Test-Path $tOut) {
+                    $lines = Get-Content $tOut -ErrorAction SilentlyContinue
+                    Remove-Item $tOut -Force -ErrorAction SilentlyContinue
+                    if ($lines) {
+                        foreach ($l in $lines) {
+                            $c = $l.Trim()
+                            if ($c) { Add-Log $c }
+                        }
+                    }
+                }
+            }
+
             try {
                 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]3072 -bor [System.Net.SecurityProtocolType]768 -bor [System.Net.SecurityProtocolType]192
 
                 $vDir = "$env:APPDATA\Vencord"
                 $tDist = "$vDir\dist"
                 $sFile = "$vDir\settings\settings.json"
+                $msg = $sync.I18n
 
-                Add-Log "Targets: $(($sync.Targets) -join ', ')"
-
-                $procs = Get-Process | Where-Object { $_.ProcessName -like "*Discord*" -and $_.ProcessName -notlike "*Helper*" }
-                if ($procs) {
-                    Add-Log "Stopping Discord processes..."
-                    foreach ($p in $procs) {
-                        Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue
-                    }
-                    Start-Sleep -Seconds 1
-                }
+                Add-Log ([string]::Format($msg.LogTargets, ($sync.Targets -join ', ')))
 
                 $src = $null
                 $cli = $null
@@ -615,7 +714,7 @@ function Start-WpfInstallerApp {
                         if (Test-Path $tempCli) {
                             $cli = $tempCli
                         } else {
-                            Add-Log "Downloading installer CLI..."
+                            Add-Log $msg.LogDownloadingCli
                             $wc = New-Object System.Net.WebClient
                             $wc.Headers.Add("User-Agent", "PowerShell")
                             $wc.DownloadFile($sync.CliUrl, $tempCli)
@@ -630,8 +729,8 @@ function Start-WpfInstallerApp {
                         if ($paths -and $paths.Count -gt 0) {
                             foreach ($loc in $paths) {
                                 if (Test-Path $loc) {
-                                    Add-Log "Uninstalling $target at $loc..."
-                                    $apps = Get-ChildItem $loc -Directory -Filter "app-*" -ErrorAction SilentlyContinue
+                                    Add-Log ([string]::Format($msg.LogUninstallingLoc, $target, $loc))
+                                    $apps = Get-ChildItem $loc -Directory -Filter "app-*" -ErrorAction SilentlyContinue | Sort-Object { try { [version]($_.Name -replace '^app-','') } catch { [version]'0.0.0.0' } } -Descending
                                     $needsUnpatch = $false
                                     foreach ($a in $apps) {
                                         $resDir = Join-Path $a.FullName "resources"
@@ -642,12 +741,9 @@ function Start-WpfInstallerApp {
                                     }
 
                                     if ($needsUnpatch) {
-                                        & $cli -uninstall -location "$loc" 2>&1 | ForEach-Object {
-                                            $str = if ($_ -is [System.Management.Automation.ErrorRecord]) { $_.Exception.Message } else { $_.ToString() }
-                                            if ($str.Trim()) { Add-Log $str.Trim() }
-                                        }
+                                        Invoke-Cli $cli "-uninstall -location `"$loc`""
                                     } else {
-                                        Add-Log "$target is already clean."
+                                        Add-Log ([string]::Format($msg.LogAlreadyClean, $target))
                                     }
 
                                     foreach ($a in $apps) {
@@ -662,11 +758,8 @@ function Start-WpfInstallerApp {
                                 }
                             }
                         } else {
-                            Add-Log "Uninstalling $target via branch $branch..."
-                            & $cli -uninstall -branch $branch 2>&1 | ForEach-Object {
-                                $str = if ($_ -is [System.Management.Automation.ErrorRecord]) { $_.Exception.Message } else { $_.ToString() }
-                                if ($str.Trim()) { Add-Log $str.Trim() }
-                            }
+                            Add-Log ([string]::Format($msg.LogUninstallingBranch, $target, $branch))
+                            Invoke-Cli $cli "-uninstall -branch $branch"
                         }
                     }
 
@@ -681,28 +774,13 @@ function Start-WpfInstallerApp {
                         } catch {}
                     }
 
-                    Add-Log "Relaunching Discord..."
-                    foreach ($target in $sync.Targets) {
-                        $paths = $sync.Paths[$target]
-                        foreach ($loc in $paths) {
-                            $upd = Join-Path $loc "Update.exe"
-                            $exeName = switch ($target) { "DiscordPTB" { "DiscordPTB.exe" } "DiscordCanary" { "DiscordCanary.exe" } default { "Discord.exe" } }
-                            if (Test-Path $upd) {
-                                Start-Process $upd -ArgumentList "--processStart", $exeName
-                            } else {
-                                $exe = Get-ChildItem $loc -Filter $exeName -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-                                if ($exe) { Start-Process $exe.FullName }
-                            }
-                        }
-                    }
-
-                    Add-Log "Uninstall completed."
+                    Add-Log $msg.LogUninstallSuccess
                     $sync.Done = $true
                     return
                 }
 
                 if (-not $src -or -not $cli) {
-                    Add-Log "Downloading package repository..."
+                    Add-Log $msg.LogDownloadingRepo
                     $tmp = Join-Path $env:TEMP ("FMD_" + (Get-Random))
                     New-Item -ItemType Directory -Path $tmp -Force | Out-Null
                     $zip = Join-Path $tmp "package.zip"
@@ -710,12 +788,8 @@ function Start-WpfInstallerApp {
                     $wc.Headers.Add("User-Agent", "PowerShell")
                     $wc.DownloadFile($sync.RepoUrl, $zip)
 
-                    if (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
-                        Expand-Archive -Path $zip -DestinationPath $tmp -Force
-                    } else {
-                        Add-Type -AssemblyName System.IO.Compression.FileSystem
-                        [System.IO.Compression.ZipFile]::ExtractToDirectory($zip, $tmp)
-                    }
+                    Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
+                    [System.IO.Compression.ZipFile]::ExtractToDirectory($zip, $tmp)
 
                     $ext = Get-ChildItem -Path $tmp -Directory | Where-Object { $_.Name -like "*fake-mute-deafen*" } | Select-Object -First 1
                     if (-not $ext) { $ext = Get-Item $tmp }
@@ -726,7 +800,7 @@ function Start-WpfInstallerApp {
                 if (-not (Test-Path $cli)) {
                     $tempCli = Join-Path $env:TEMP "VencordInstallerCli.exe"
                     if (-not (Test-Path $tempCli)) {
-                        Add-Log "Downloading installer CLI..."
+                        Add-Log $msg.LogDownloadingCli
                         $wc = New-Object System.Net.WebClient
                         $wc.Headers.Add("User-Agent", "PowerShell")
                         $wc.DownloadFile($sync.CliUrl, $tempCli)
@@ -741,8 +815,8 @@ function Start-WpfInstallerApp {
                     if ($paths -and $paths.Count -gt 0) {
                         foreach ($loc in $paths) {
                             if (Test-Path $loc) {
-                                Add-Log "Checking $target integrity at $loc..."
-                                $apps = Get-ChildItem $loc -Directory -Filter "app-*" -ErrorAction SilentlyContinue | Sort-Object Name -Descending
+                                Add-Log ([string]::Format($msg.LogChecking, $target, $loc))
+                                $apps = Get-ChildItem $loc -Directory -Filter "app-*" -ErrorAction SilentlyContinue | Sort-Object { try { [version]($_.Name -replace '^app-','') } catch { [version]'0.0.0.0' } } -Descending
                                 if ($apps) {
                                     $latest = $apps[0]
                                     $latRes = Join-Path $latest.FullName "resources"
@@ -763,30 +837,24 @@ function Start-WpfInstallerApp {
                                     }
                                 }
 
-                                Add-Log "Patching $target at $loc..."
-                                & $cli -install -location "$loc" 2>&1 | ForEach-Object {
-                                    $str = if ($_ -is [System.Management.Automation.ErrorRecord]) { $_.Exception.Message } else { $_.ToString() }
-                                    if ($str.Trim()) { Add-Log $str.Trim() }
-                                }
+                                Add-Log ([string]::Format($msg.LogPatchingLoc, $target, $loc))
+                                Invoke-Cli $cli "-install -location `"$loc`""
                             }
                         }
                     } else {
-                        Add-Log "Patching $target via branch $branch..."
-                        & $cli -install -branch $branch 2>&1 | ForEach-Object {
-                            $str = if ($_ -is [System.Management.Automation.ErrorRecord]) { $_.Exception.Message } else { $_.ToString() }
-                            if ($str.Trim()) { Add-Log $str.Trim() }
-                        }
+                        Add-Log ([string]::Format($msg.LogPatchingBranch, $target, $branch))
+                        Invoke-Cli $cli "-install -branch $branch"
                     }
                 }
 
-                Add-Log "Copying FakeMuteDeafen files..."
+                Add-Log $msg.LogCopying
                 if (-not (Test-Path $tDist)) { New-Item -ItemType Directory -Path $tDist -Force | Out-Null }
                 Copy-Item -Path "$src\*" -Destination "$tDist\" -Recurse -Force
 
                 $theme = "$vDir\themes\midnight.theme.css"
                 if (Test-Path $theme) { Remove-Item -Path $theme -Force -ErrorAction SilentlyContinue }
 
-                Add-Log "Updating configuration..."
+                Add-Log $msg.LogUpdatingConfig
                 $sDir = "$vDir\settings"
                 if (-not (Test-Path $sDir)) { New-Item -ItemType Directory -Path $sDir -Force | Out-Null }
                 $c = @{}
@@ -809,33 +877,18 @@ function Start-WpfInstallerApp {
                     Remove-Item -Path $tmp -Recurse -Force -ErrorAction SilentlyContinue
                 }
 
-                Add-Log "Relaunching Discord..."
-                foreach ($target in $sync.Targets) {
-                    $paths = $sync.Paths[$target]
-                    foreach ($loc in $paths) {
-                        $upd = Join-Path $loc "Update.exe"
-                        $exeName = switch ($target) { "DiscordPTB" { "DiscordPTB.exe" } "DiscordCanary" { "DiscordCanary.exe" } default { "Discord.exe" } }
-                        if (Test-Path $upd) {
-                            Start-Process $upd -ArgumentList "--processStart", $exeName
-                        } else {
-                            $exe = Get-ChildItem $loc -Filter $exeName -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-                            if ($exe) { Start-Process $exe.FullName }
-                        }
-                    }
-                }
-
-                Add-Log "Installation completed successfully."
+                Add-Log $msg.LogInstallSuccess
                 $sync.Done = $true
             } catch {
                 $sync.Error = $_.Exception.Message
-                Add-Log "Error: $($sync.Error)"
+                Add-Log ([string]::Format($sync.I18n.LogError, $sync.Error))
                 $sync.Done = $true
             }
         }
 
         $script:sync = $sync
         $script:rs = [RunspaceFactory]::CreateRunspace()
-        $script:rs.ApartmentState = [System.Threading.ApartmentState]::STA
+        $script:rs.ApartmentState = [System.Threading.ApartmentState]::MTA
         $script:rs.Open()
 
         $script:ps = [PowerShell]::Create()
@@ -843,36 +896,36 @@ function Start-WpfInstallerApp {
         $null = $script:ps.AddCommand("Invoke-Command").AddParameter("ScriptBlock", $worker).AddParameter("ArgumentList", @($script:sync))
         $script:h = $script:ps.BeginInvoke()
 
-        $script:timer = New-Object System.Windows.Threading.DispatcherTimer
-        $script:timer.Interval = [TimeSpan]::FromMilliseconds(80)
+        $script:timer = New-Object System.Windows.Threading.DispatcherTimer([System.Windows.Threading.DispatcherPriority]::Normal, $window.Dispatcher)
+        $script:timer.Interval = [TimeSpan]::FromMilliseconds(50)
         $script:timer.Add_Tick({
             while ($script:sync.Logs.Count -gt 0) {
                 $entry = $script:sync.Logs[0]
                 $script:sync.Logs.RemoveAt(0)
-                $txtLog.AppendText($entry + "`r`n")
-                $txtLog.ScrollToEnd()
+                $script:txtLog.AppendText($entry + "`r`n")
+                $script:txtLog.ScrollToEnd()
             }
             if ($script:h.IsCompleted -or $script:sync.Done) {
                 while ($script:sync.Logs.Count -gt 0) {
                     $entry = $script:sync.Logs[0]
                     $script:sync.Logs.RemoveAt(0)
-                    $txtLog.AppendText($entry + "`r`n")
-                    $txtLog.ScrollToEnd()
+                    $script:txtLog.AppendText($entry + "`r`n")
+                    $script:txtLog.ScrollToEnd()
                 }
                 $script:timer.Stop()
-                $pb.IsIndeterminate = $false
-                $pb.Value = 100
+                $script:pb.IsIndeterminate = $false
+                $script:pb.Value = 100
 
                 $d = $global:i18n[$global:CurrentLang]
                 if ($script:sync.Error) {
-                    $lblStatus.Text = [string]::Format($d.Error, $script:sync.Error)
-                    $lblStatus.Foreground = Get-Brush "#F23F43"
+                    $script:lblStatus.Text = [string]::Format($d.Error, $script:sync.Error)
+                    $script:lblStatus.Foreground = script:Get-Brush "#F23F43"
                 } else {
-                    $lblStatus.Text = $d.Done
-                    $lblStatus.Foreground = Get-Brush "#23A55A"
+                    $script:lblStatus.Text = $d.Done
+                    $script:lblStatus.Foreground = script:Get-Brush "#23A55A"
                 }
 
-                Set-State $true
+                script:Set-State $true
                 try {
                     $script:ps.EndInvoke($script:h)
                     $script:ps.Dispose()
