@@ -4,10 +4,10 @@ Spoof voice mute and deafen status in Discord while keeping microphone and audio
 
 ## Quick Install (PowerShell)
 
-Supports Windows 7, 8, 8.1, 10, 11:
+Supports Windows 10 / 11:
 
 ```powershell
-[Net.ServicePointManager]::SecurityProtocol = 3072 -bor 768 -bor 192; irm https://raw.githubusercontent.com/phwyverysad/discord-fake-mute-deafen/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/phwyverysad/discord-fake-mute-deafen/main/install.ps1 | iex
 ```
 
 ## Features
