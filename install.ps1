@@ -653,6 +653,7 @@ function Start-WpfInstallerApp {
             LocalDir = $ctxDir
             Lang     = $global:CurrentLang
             I18n     = $global:i18n[$global:CurrentLang]
+            DistUrl  = "https://raw.githubusercontent.com/phwyverysad/discord-fake-mute-deafen/main/dist.zip"
             RepoUrl  = "https://github.com/phwyverysad/discord-fake-mute-deafen/archive/refs/heads/main.zip"
             CliUrl   = "https://github.com/Vencord/Installer/releases/latest/download/VencordInstallerCli.exe"
             Logs     = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
@@ -699,16 +700,29 @@ function Start-WpfInstallerApp {
                 $src = $null
                 $cli = $null
                 $tmp = $null
+                $cacheDir = "$env:LOCALAPPDATA\FakeMuteDeafen\dist"
+
+                $cliCandidates = @()
+                if ($sync.LocalDir) { $cliCandidates += (Join-Path $sync.LocalDir "VencordInstallerCli.exe") }
+                $cliCandidates += (Join-Path $env:TEMP "VencordInstallerCli.exe")
+                $cliCandidates += "$env:APPDATA\Vencord\dist\Installer\VencordInstallerCli.exe"
+                $cliCandidates += "$env:LOCALAPPDATA\FakeMuteDeafen\VencordInstallerCli.exe"
+
+                foreach ($c in $cliCandidates) {
+                    if ((Test-Path $c) -and ((Get-Item $c).Length -gt 1000000)) {
+                        $cli = $c
+                        break
+                    }
+                }
 
                 if ($sync.LocalDir) {
                     $lDist = Join-Path $sync.LocalDir "dist"
-                    $lCli  = Join-Path $sync.LocalDir "VencordInstallerCli.exe"
                     if ((Test-Path $lDist) -and (Test-Path (Join-Path $lDist "patcher.js"))) {
                         $src = $lDist
                     }
-                    if (Test-Path $lCli) {
-                        $cli = $lCli
-                    }
+                }
+                if (-not $src -and (Test-Path (Join-Path $cacheDir "patcher.js"))) {
+                    $src = $cacheDir
                 }
 
                 if ($sync.Action -eq "Uninstall") {
@@ -782,25 +796,39 @@ function Start-WpfInstallerApp {
                     return
                 }
 
-                if (-not $src -or -not $cli) {
+                if (-not $src) {
                     Add-Log $msg.LogDownloadingRepo
-                    $tmp = Join-Path $env:TEMP ("FMD_" + (Get-Random))
-                    New-Item -ItemType Directory -Path $tmp -Force | Out-Null
-                    $zip = Join-Path $tmp "package.zip"
+                    if (-not (Test-Path $cacheDir)) { New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null }
+                    $distZip = Join-Path $env:TEMP "FMD_dist.zip"
                     $wc = New-Object System.Net.WebClient
                     $wc.Headers.Add("User-Agent", "PowerShell")
-                    $wc.DownloadFile($sync.RepoUrl, $zip)
+                    $dlOk = $false
+                    try {
+                        $wc.DownloadFile($sync.DistUrl, $distZip)
+                        Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
+                        [System.IO.Compression.ZipFile]::ExtractToDirectory($distZip, $cacheDir)
+                        Remove-Item $distZip -Force -ErrorAction SilentlyContinue
+                        if (Test-Path (Join-Path $cacheDir "patcher.js")) {
+                            $src = $cacheDir
+                            $dlOk = $true
+                        }
+                    } catch {}
 
-                    Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
-                    [System.IO.Compression.ZipFile]::ExtractToDirectory($zip, $tmp)
-
-                    $ext = Get-ChildItem -Path $tmp -Directory | Where-Object { $_.Name -like "*fake-mute-deafen*" } | Select-Object -First 1
-                    if (-not $ext) { $ext = Get-Item $tmp }
-                    if (-not $src) { $src = Join-Path $ext.FullName "dist" }
-                    if (-not $cli) { $cli = Join-Path $ext.FullName "VencordInstallerCli.exe" }
+                    if (-not $dlOk) {
+                        $tmp = Join-Path $env:TEMP ("FMD_" + (Get-Random))
+                        New-Item -ItemType Directory -Path $tmp -Force | Out-Null
+                        $zipFb = Join-Path $tmp "package.zip"
+                        $wc.DownloadFile($sync.RepoUrl, $zipFb)
+                        Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction SilentlyContinue
+                        [System.IO.Compression.ZipFile]::ExtractToDirectory($zipFb, $tmp)
+                        $ext = Get-ChildItem -Path $tmp -Directory | Where-Object { $_.Name -like "*fake-mute-deafen*" } | Select-Object -First 1
+                        if (-not $ext) { $ext = Get-Item $tmp }
+                        $src = Join-Path $ext.FullName "dist"
+                        if (-not $cli) { $cli = Join-Path $ext.FullName "VencordInstallerCli.exe" }
+                    }
                 }
 
-                if (-not (Test-Path $cli)) {
+                if (-not $cli) {
                     $tempCli = Join-Path $env:TEMP "VencordInstallerCli.exe"
                     if (-not (Test-Path $tempCli)) {
                         Add-Log $msg.LogDownloadingCli
